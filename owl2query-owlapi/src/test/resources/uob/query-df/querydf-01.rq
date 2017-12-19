@@ -1,0 +1,12 @@
+# Q1	
+# This query is to test DifferentFrom(_:a,c) atoms.
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ub: <http://uob.iodt.ibm.com/univ-bench-dl.owl#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#> 
+
+SELECT *
+WHERE {
+	<http://www.Department0.University0.edu/Course0> owl:differentFrom _:a .
+}

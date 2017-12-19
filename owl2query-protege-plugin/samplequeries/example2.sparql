@@ -1,0 +1,30 @@
+SELECT  ?C ?x
+WHERE
+  { ?x  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Student> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?C .
+    ?C  <http://www.w3.org/2000/01/rdf-schema#subClassOf>  <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Employee> .
+  }
+# LayoutStore
+# GraphLayout CurrentLayout
+# 1 RBox 324.0 0.0 620.0 89.0
+# 1 h 319.0 0.0 5.0 89.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Employee" 202.0 0.0 109.0 33.0
+# 1 v 0.0 89.0 944.0 5.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Student" 14.0 56.0 99.0 33.0
+# 1 0 "x" 104.0 116.0 77.0 33.0
+# 1 TBox 0.0 0.0 319.0 89.0
+# 1 2 "C" 172.0 52.0 77.0 33.0
+# 1 ABox 0.0 94.0 944.0 295.0
+# end
+
+# GraphLayout layout1
+# 1 RBox 646.0 0.0 307.0 109.0
+# 1 h 641.0 0.0 5.0 109.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Employee" 532.0 16.0 109.0 33.0
+# 1 v 0.0 109.0 953.0 5.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Student" 236.0 36.0 99.0 33.0
+# 1 0 "x" 308.0 136.0 77.0 33.0
+# 1 TBox 0.0 0.0 641.0 109.0
+# 1 2 "C" 376.0 38.0 77.0 33.0
+# 1 ABox 0.0 114.0 953.0 444.0
+# end

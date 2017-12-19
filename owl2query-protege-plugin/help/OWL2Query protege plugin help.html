@@ -1,0 +1,504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  <title>OWL2Query graph help</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head><body style="position:relative">
+<h1> The protege plugin. </h1>
+<ul>
+<li><a href="#instalation_notes">Instalation notes</a></li>
+<ul>
+<li><a href="#Requierments">Requierments</li></li>
+<li><a href="#Instalation">Instalation</li></li>
+</ul>
+<li><a href="#GUI Map">GUI Map</li></li>
+<ul>
+<li><a href="#Toolbar">Toolbar</li></li>
+<li><a href="#Prefix editor">Prefix editor</li></li>
+<li><a href="#Variable editor">Variable editor</li></li>
+<li><a href="#Layout editor">Layout editor</li></li>
+<li><a href="#Query Graph">Query Graph</li></li>
+<li><a href="#SPARQL query view">SPARQL query view</li></li>
+<li><a href="#SPARQL-DL preview">SPARQL-DL preview</li></li>
+<li><a href="#Resut panel">Resut panel</li></li>
+
+<li><a href="#Edge Editors">Edge Editors</li></li>
+<li><a href="#Property Value Editor">Property Value Editor</li></li>
+<li><a href="#Abox node editor">Abox node editor</li></li>
+<ul>
+<li><a href="#Variable node editor">Variable node editor</li></li>
+<li><a href="#Individual node editor">Individual node editor</li></li>
+<li><a href="#Literal editor">Literal editor</li></li>
+</ul>
+<li><a href="#TBox Node editor">TBox Node editor</li></li>
+<ul>
+<li><a href="#Variable node editor">Variable node editor</li></li>
+<li><a href="#Constant editor">Constant editor</li></li>
+</ul>
+<li><a href="#RBox Node editor">RBox Node editor</li></li>
+</ul>
+<li><a href="#Making query atoms">Making query atoms</li>
+<li><a href="#Conversion rules">Conversion rules</li>
+<li><a href="#The query graph graphical representation">The query graph graphical representation</li>
+</ul>
+
+<a name="instalation_notes"><h2>Instalation notes</h2></a>
+<a name="Requierments"><h3>Requierments</h3></a>
+<ul>
+<li><a href="http://protege.stanford.edu">Protege 4.1</a></li>
+<li><a href="http://sourceforge.net/projects/owlapi">OWLAPI v3.2.2	</a></li>
+<li><a href="http://www.oracle.com/technetwork/java/javase/overview/index-jsp-136246.html">Java 6 (Oracle JDK)</a></li>
+</ul>
+
+<a name="Instalation"><h3>Instalation</h3></a>
+<p>
+Download the owl2query protege plugin jar file. Copy the downloaded jar file into $PROTEGE_HOME/plugins directory and restart Protege. If the OWL2Query tab is not opened (it is not shown in the tab list) you must open the OWL2Query view. To open the view, go to the protege menu bar and select Window->Views->Misck views->OWL2Query. 
+</p>
+<a name="GUI Map"><h2>GUI Map</h2></a>
+
+<p>
+&nbsp;&nbsp;&nbsp;Figure 1 shows the gui map, the parts of the plugin highlited in red borders. The highlited areas are linked to the topics that describes them. 
+
+<!-- The protege plugin is implemented as a protege view. On the top as all other protegeviews is the title. The components in the view under the title arearranged in rows. The next row, under thetoolbar dynamically changes when depending on the current view, graphview or sparql view. If the graph view is selected the row is devidedwith a vertical split bar. On the left of the bar the prefix editor islocated. On the right of the bar we have a tabbed pane containing twopanels, the variable editor and the graph layout editor. When theSPARQL view is selected the split bar and the left panel containing thetabbed view are removed from the row. As a result only the prefixeditor is visible in the SPARQL view. Under the SPARQL view we have thequery view. Here the same query is visualized as a graph or serializedin SPARQL syntax depending on the radio button selection in the toolbar on top of the view. The graph view is where we edit the query usingthe node editors, edge editors, mouse gestures and keyboard keys. TheSPARQL view is a simple text editor. Beneath the query view, there isone text line row used to show the query in simple SPARQL-DL syntax.This row is shown in both graph and SPARQL views. The last row in theplugin is the result view. On top of the view is the run/stop buttonfor the query execution. Under it is the result table.-->
+ </p>
+
+<div style="text-align:center; margin-left:auto; margin-right:auto;position:relative">
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+      <td style="background:url('screenshots/guimap.png');background-repeat:no-repeat;">
+	  <img alt="plugin screenshot" id="map1" usemap="#map1" title="plugin screenshot" src="screenshots/bguimap.gif"  style="position:relative;top:-2px;left:-2px;" />
+	  </td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 1 Screenshot</caption>
+</table>
+
+<map id="_map1" name="map1">
+<area shape="rect" coords="118,295,198,367" href="#Edge Editors" alt="ABox edge editor" title="ABox edge editor" class="a1" border="1"/>
+<area shape="rect" coords="224,245,319,317" href="#Edge Editors" alt="ABox-TBox edge editor" title="ABox-TBox edge editor"  />
+<area shape="rect" coords="105,164,224,296" href="#Edge Editors" alt="TBox edge editor" title="TBox edge editor"   />
+<area shape="rect" coords="396,165,530,295" href="#Edge Editors" alt="RBox edge editor" title="RBox edge editor"    />
+<area shape="rect" coords="179,35,253,66" href="#SPARQL query view" alt="sparql query view" title="sparql query view"    />
+<area shape="rect" coords="11,32,323,67" href="#Toolbar" alt="toolbar" title="toolbar"    />
+<area shape="rect" coords="9,68,363,165" href="#Prefix editor" alt="prefix editor" title="prefix editor"    />
+<area shape="rect" coords="436,72,500,94" href="#Layout editor" alt="layout editor" title="layout editor"    />
+<area shape="rect" coords="369,68,816,165" href="#Variable editor" alt="variable editor" title="variable editor"    />
+<area shape="rect" coords="10,173,635,370" href="#Query Graph" alt="query graph" title="query graph"    />
+<area shape="rect" coords="638,173,816,374" href="#nodeeditors" alt="node editors" title="node editors"    />
+<area shape="rect" coords="10,374,817,396" href="#SPARQL-DL preview" alt="sparql-dl preview" title="sparql-dl preview"    />
+<area shape="rect" coords="8,402,817,529" href="#Resut panel" alt="resut panel" title="resut panel"    />
+</map>
+
+<!-- Image map text links - Start - If you do not wish to have text links under your image map, you can move or delete this DIV 
+style="text-decoration:none; color:black; font-size:12px; font-family:verdana;"-->
+<div style="text-align:center; font-size:12px; font-family:verdana; margin-left:auto; margin-right:auto; width:828px;">
+	<a  href="#Toolbar" title="toolbar">toolbar</a>
+ | 	<a  href="#Prefix editor" title="prefix editor">prefix editor</a>
+ | 	<a  href="#Variable editor" title="variable editor">variable editor</a>
+ | 	<a  href="#Layout editor" title="layout editor">layout editor</a>
+ | 	<a  href="#Query Graph" title="query graph">query graph</a>
+ | 	<a  href="#SPARQL query view" title="sparql query view">sparql query view</a>
+ | 	<a  href="#nodeeditors" title="node editors">node editors</a>
+ | 	<a  href="#SPARQL-DL preview" title="sparql-dl preview">sparql-dl preview</a>
+ | 	<a  href="#Resut panel" title="resut panel">resut panel</a>
+ | 	<a  href="#Edge Editors" title="ABox edge editor">ABox edge editor</a>
+ | 	<a  href="#Edge Editors" title="ABox-TBox edge editor">ABox-TBox edge editor</a>
+ | 	<a  href="#Edge Editors" title="TBox edge editor">TBox edge editor</a>
+ | 	<a  href="#Edge Editors" title="RBox edge editor">RBox edge editor</a>
+</div>
+<!-- Image map text links - End - -->
+
+</div>
+
+<a name="Toolbar"><h3>Toolbar</h3></a>
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+      <td><img alt="toolbar screenshot" title="plugin screenshot" src="screenshots/toolbar.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">toolbar</caption>
+</table>
+<p>
+First row in the plugin is the toolbar, which contains 
+demo <img src="screenshots/sample.png" class="inline" />
+, new <img src="screenshots/new.png" class="inline" />
+, open <img src="screenshots/open.png" class="inline" />
+and save <img src="screenshots/save.png" class="inline" />
+query buttons. Next to them are two radio buttons used to switch between the graph view and the sparql view. The last two buttons in the toolbar are the undo <img src="screenshots/undo.png" class="inline" />
+and redo <img src="screenshots/redo.png" class="inline" />.
+</p>
+
+
+<a name="Prefix editor"><h3>Prefix editor</h3></a>
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="prefix editor" src="screenshots/prefix_editor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Prefix editor</caption>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp; The prefix editor is capable of editing the short form of the prefix and to toggle the usage of the short form of the prefix in query. The editor is organized in a table the rows of which are the individual prefixes. The table has three columns. The first column in the table represents the usage state of the given prefix, it is shown as a checkbox component. The second column is rendered as text field and representsthe full prefix value. This field is not editable. The third is also rendered as a text field and it represents the short form of the prefix. This filed is editable. The prefix editor contains logic toensure the consistency of the short form prefixes(unique value for eachrow in the last column in the table).
+</p>
+<p>On top of the table there are four buttons. The first two buttons are used to manipulate the usage column. 
+<ul>
+<li style="list-style-image: url('screenshots/invert_usage.png');">
+the invert usage button inverts the usage column. </li>
+<li style="list-style-image: url('screenshots/use_all.png');">use all button selects all the checkboxes in the usage column, makes all the prefixes to be used.</li></ul>
+The last two buttons are used to restore the default values of the short from of the prefixes. 
+<ul>
+<li style="list-style-image: url('screenshots/restoreselected_defaults.png');">the restore selected rows button will restore only the selected (highlighted) rows in the table
+<li style="list-style-image: url('screenshots/restoreall_defaults.png');">the restore all button will restore all rows.</li>
+</ul>
+</p>
+
+
+<a name="Variable editor"><h3>Variable editor</h3></a>
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="variable editor" src="screenshots/var_editor.png" /></td>
+    </tr>
+  </tbody>
+  <caption align="bottom">Prefix editor</caption>
+</table>
+
+<br />
+
+<p>&nbsp;&nbsp;&nbsp; The variable editororganizes the variables in a table. Each row in the table representsone variable. The first column is the name or the label of thevariable. This column is represented as a not editable text field. Theother five columns are rendered as a checkbox. Second Column representswhether the variable is distinguished. This column is editable if thevariable is used only in the abox. The third column shows whether thevariable is a result variable. This column is editable if the variableis distinguished. The last three columns represent in what boxes it isbeing used, abox, tbox, abox. The variable can be used in all of theboxes at the same time and will be used in at least one. These threecolumns are never editable. </p>
+
+<a name="Layout editor"><h3>Layout editor</h3></a>
+
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="layout editor" src="screenshots/laytout_editor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Layout editor</caption>
+</table>
+
+<p>&nbsp;&nbsp;&nbsp; The layout editormanages the layouts that are being associated with the query. The listshows the names of the layouts. The names of the layouts can be edited.Under the list there are three buttons snapshot, apply and delete. Thesnapshot button saves the current layout of the graph into a new layoutand adds it to the list. The apply button uses the selected layout inthe list to arrange the nodes in the graph. The delete button deletesall the selected layouts in the list. Layouting the graph using theapply button will change only nodes that were part of the graph at thetime when the layout was created using the snapshot button. New nodescreate after the time the layout was created will not change. </p>
+<table width="100%" height="0%"></table>
+<a name="Query Graph"><h3>Query Graph</h3></a>
+
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="graph view" src="screenshots/aboxeditin_sel.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Query graph view </caption>
+</table>
+
+<p>&nbsp;&nbsp;&nbsp; Here only basicfunctionality of the graph will be explained. Creating concrete queryatoms and more detailed explanation of the functionality will beexplained later. The graph editor has three ways in which one can editthe graph. The most intuitive one is interacting with the graph areausing mouse gestures and the keyboard. By interacting with the graph wecan move nodes and manually layout the graph. This however does notchange the query it self. To change the query we can add and removenodes and edges. To add a abox variable node simply doubleclicksomewhere in the free abox area in the graph (where there are no nodesand edges). Creating tbox and rbox variables is the same, doubleclickon the area where you wish to create a variable. Adding edges is onlypossible when you have two nodes. 
+</p><p>To add and edge place the mousecursor anywhere near the border of the node. The cursor changes to theedge tool cursor if the node can have edges. If the cursor changedpress the right mouse button and drag to the node you wish to connectto. When the cursor is over the target node it will change the cursor. If the edge you are trying to create is correct an the cursor changes to accept edge cursor, releasing the mouse button will cause the edgeto be created. If the target node is not connectable to the source node(the one that the drag was started on) the cursor is changed to denyedge cursor. Releasing the pressed button will not do anything. In the case of abox edge (edge that both nodes are abox nodes) a popup menu will be shone where we can choose the type of edge we want to create. 
+</p><p>Deleting is done with the delete key on the keyboard. When the delete is pressed the selection in the graph is deleted. If the selection was a node all the edges that are connected to the node are deleted. 
+</p><p>The other way to edit the graph is by editing the already created nodes andedges. The nodes are edited in the node editor. To edit a node singlenode is selected in the graph. The editor will appear on the right sidein the graph view. The editor changes upon graph selection and hides if the selection is empty or more than one elements are selected. When editing a node in the node editor it is necessary to press the apply button at the bottom in order to apply changes. 
+</p><p>To edit an edge simply doubleclick the edge. A in place editor will popup at the at the pointthat was clicked. To apply the changes the apply button at button intheeditor must be clicked. </p>
+
+<a name="SPARQL query view"><h3>SPARQL query view</h3></a>
+
+<table class="img_with_caption" align="right">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="SPARQL view" src="screenshots/sparql_view.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 6 SPARQL view</caption>
+</table>
+
+<p>&nbsp;&nbsp;&nbsp; The query can bealso serialized in the SPARQL format. This is done by selecting the SPARQL radio button in the main toolbar of the plugin. The Sparql view consists of a simple text editor containing the query represented in sparql format. 
+</p>
+<table width="100%" height="0%"></table>
+
+<a name="SPARQL-DL preview"><h3>SPARQL-DL preview</h3></a>
+<p>
+In this text field previews the query in SPARQL-DL format.
+</p>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="result panel" src="screenshots/sparql-dl_preview.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 7 Result panel</caption>
+</table>
+
+<a name="Resut panel"><h3>Resut panel</h3></a>
+
+<table class="img_with_caption" align="right">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="result panel" src="screenshots/result_panel.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 7 Result panel</caption>
+</table>
+
+<p>&nbsp;&nbsp;&nbsp; The result panel hastwo components a run/stop button at the top and a table in which theresults are shown. The run/stop button is disabled if the there is nota selected and started reasoner in the protege. If the button isenabled it runs the query and changes the button to a stop button. Ifthe query takes too long to execute one can stop the execution byclicking the button. Doing so will cause the plugin to try to stop thereasoner. After the execution is completed the button changes back toa run button. After a successful execution the result table is filledwith the result of the query. The columns in the table represent theresult variables and the rows are the different bindings of the resultvariables in the query. The table is view only, no editing issupported. </p>
+
+<a name="Edge Editors"><h3>Edge Editors</h3></a>
+<p>&nbsp;&nbsp;&nbsp; The edge editors arebasically query atom choosers. The query atom list in the editorchangesbased on the type of edge that is being edited. The changes are appliedafter the apply button at the bottom of the form is clicked. </p>
+
+<table cellspacing="10px" align="center">
+<tbody>
+<tr>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="abox edge editor" src="screenshots/abox_edgeeditor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 7 ABox edge editor</caption>
+</table>
+</td>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="abox tbox edge editor" src="screenshots/aboxtbox_edgeeditor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 8 ABox-TBox edge editor </caption>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="tobx edge editor" src="screenshots/tbox_edgeeditor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 9 TBox edge editor</caption>
+</table>
+</td>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="rbox edge editor" src="screenshots/rbox_edgeeditor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 10 RBox edge editor</caption>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<a name="nodeeditors"></a>
+<a name="Property Value Editor"><h3>Property Value Editor</h3></a>
+
+<p>&nbsp;&nbsp;&nbsp; The property valueeditor is basically a property list editor. We can add named object ordata properties to the list by using the current selection tree. Theselection tree represents the hierarchy of object or data properties.Wecan switch between the two trees using the radio object and databuttonsat the top of the editor. If any part of the query assumes that thenodethat represents the object of the property value query atom (the nodethat the arrow points to) either a object property or data property theeditor is constrained. In this case the editor is constrained to makeconsistent changes and therefore one of the radiobuttons is disabled.Toadd new rbox variable not present in the query click the text field,type the new variable name and press enter. To add a existing rboxvariable to the list click the arrow button on the right of the textfield. A popup list of existing rbox query variables shows. Select thecheck box next to the desired variables and click somewhere in theproperty value editor to hide the popup. To remove entries from thelist simply click the red cross next to the entry or select thedesired rows in the list and then click the remove selection buttonunder the list. To apply the changes click the apply button at thebottom of the editor. </p>
+
+<table cellspacing="10px" align="center">
+<tbody valign="top">
+<tr>
+<td>
+<table class="img_with_caption">
+<caption align="bottom">Fig. 11 Property list editor with object property tree selection, used to edit property value query atoms.</caption>
+  <tbody>
+    <tr>
+      <td><img alt="property value editor" src="screenshots/aboxpropeditor_obj.png" /></td>
+    </tr>
+  </tbody>
+</table>
+</td>
+<td>
+<table class="img_with_caption">
+<caption align="bottom">Fig. 11 Property list editor with object property tree selection, used to edit property value query atoms.</caption>
+  <tbody>
+    <tr>
+      <td><img alt="property value editor" src="screenshots/aboxpropeditor_dat.png" /></td>
+    </tr>
+  </tbody>
+</table>
+</td>
+<td>
+<table class="img_with_caption">
+<caption align="bottom">Fig. 11 Property list editor with object property tree selection, used to edit property value query atoms.</caption>
+  <tbody>
+    <tr>
+      <td><img alt="property value editor" src="screenshots/aboxpropeditor_propvars_in_query.png" /></td>
+    </tr>
+  </tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+
+<a name="Abox node editor"><h3>Abox node editor</h3></a>
+
+<p> The abox node editor three views variable, individual and literal. One can switch between the view using the radiobuttons at the top of the editor. </p>
+
+<a name="Variable node editor"><h4>Variable node editor</h4></a>
+
+<p> The variable editor can only changethevariable name of the node. The field must contain a correct value inorder to be able to apply the change. </p>
+
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="abox var editor" src="screenshots/aboxeditor_var.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 12 ABox node editor, variable view</caption>
+</table>
+<table width="100%" height="0%"></table>
+
+
+<a name="Individual node editor"><h4>Individual node editor</h4></a>
+
+<p>&nbsp;&nbsp;&nbsp; The individualeditor is used to select the individual that the node will represent.This is done using the single selection list. By selection is meant aradio button selection. A value must be selected in order to be able toapply the changes made. For easier location in the list of individualsthey are alphabetically ordered. Another feature is that the selectionin the class hierarchy tree will filter the individual list. Instancesof the selected class will appear on top of the list and the rest oftheindividuals will be gray-colored. The text field under the selectionlist shows the selected individual if any. Clicking on the field thelist will scroll to the chosen individual.</p>
+
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="abox ind editor" src="screenshots/aboxeditor_ind.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 13 ABox node editor, individual view</caption>
+</table>
+
+
+<!-- break the flow of the text-->
+<!-- <table width="100%" height="0%"></table> -->
+
+<a name="Literal editor" width="100%"><h4>Literal editor</h4></a>
+<p>&nbsp;&nbsp;&nbsp;In the literal editor usethe the data type hierarchy to select a data type if desired. Use thetext field to enter the literal value. This field is mandatory, it mustcontain a value.</p>
+</p>
+
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="abox lit editor" src="screenshots/aboxeditor_lit.png" /></td>
+    </tr>
+    </tbody>
+	<caption align="bottom">Fig. 14 ABox node editor, literal view</caption>
+</table>
+
+
+<table width="100%" height="0%"></table>
+<a name="TBox Node editor"><h3>TBox Node editor</h3></a>
+
+<p> The tbox node editor has to viewvariable editor and constant editor. Switching between the view is doneusing the radiobuttons at the top of the editor </p>
+
+<a name="Variable node editor"><h4>Variable node editor</h4></a>
+
+<p> The variable editor can only changethevariable name of the node. The field must contain a correct value inorder to be able to apply the change. </p>
+
+<a name="Constant editor"><h4>Constant editor</h4></a>
+
+<p>&nbsp;&nbsp;&nbsp; The constant editoris used to select an uri from the object or data property hierarchysingle selection trees. The hierarchy tree is selected using the objectand data property radiobuttons. Selection in the tree is also shown inthe "Selected Type" text field. Clicking the field will expand andscroll the tree to the selected property. </p>
+
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+	  <td width="7px"></td>
+      <td><img alt="tbox const editor" src="screenshots/tbox_const_editor.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 15 TBox node editor, constant view</caption>
+</table>
+
+
+<table width="100%" height="0%"></table>
+<a name="RBox Node editor"><h3>RBox Node editor</h3></a>
+
+<p>&nbsp;&nbsp;&nbsp; The rbox node editorhas two view a variable editor and a constant view. The can switchbetween the view using the variable and constant radio buttons. Thevariable editor can only change the variable name of the node. Thefieldmust contain a correct value in order to be able to apply the change.The constant editor is used to select a property uri from the object ordata property hierarchy single selection tree. The tree hierarchy canbe switched by selecting the object properties or the data propertiesradio buttons. The selection in the tree is also show in the SelectedProperty text field. By clicking this field the tree is expanding andscrolling to the selected value if it is not visible. In each view atthe bottom of the rbox editor there is a checkbox list of propertyattributes. They represent unary rbox query atoms. A shortrepresentation of the attribute labels is shown in the parentheses.Thisshort representation is used in the rbox node labels to visualize theproperties attributes . The list of attributes is filtered in thedifferent views of the editor or if the DataProperty attribute isselected in the variable view. The selection of the list is alsoconstrained. Non of the next couples of attributes can be selectedsimultaneously : DatatypeProperty-ObjectProperty, Symmetric-Asymmetric,Irreflexive-Reflexive. If the constraints are violated the olderselection of the conflicted attributes will be cleared. For example byselecting the Symmetric attribute the Asymmetric will be cleared if itwas already selected. To apply the changes click the apply button. </p>
+
+<table cellspacing="10px" align="center"><tbody valign="top">
+<tr>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="rbox var editor" src="screenshots/rboxeditor_var.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 16 RBoxnode editor, variable view</caption>
+</table>
+</td>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="rbox var editor filter attributes" src="screenshots/rboxeditor_var_dat_atr.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 17 RBox node editor, variable view with data property attribute selected</caption>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="rbox obj editor" src="screenshots/rboxeditor_obj.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 18 RBox node editor, constant view with object property selection</caption>
+</table>
+</td>
+<td>
+<table class="img_with_caption">
+  <tbody>
+    <tr>
+      <td><img alt="rbox dat editor" src="screenshots/rboxeditor_dat.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Fig. 19 RBox node editor, constant view with data property selection</caption>
+</table>
+</td>
+<tr>
+</tbody></table>
+
+
+<a name="Making query atoms"><h2>Making query atoms</h2></a>
+<p>&nbsp;&nbsp;&nbsp; The SPARQL-DL queryis represented as a list of query atoms(graph representation). Whencreating a query graph one have to create the graphical representationof the query atoms (in most cases they are represented as edges in thegraph). 
+<br /><!--            //unary--> 
+There are two ways to create query atoms.Unary query atoms (for now unary query atoms are present only in theRBox) are represented as letters in the description of a node. Tocreate, add or delete a unary query atom double click an rbox node. Therbox node editor will appear select the desired query atoms from thelist of checkboxes. Here is an screenshot of the editing(img) 
+<br /><!--            //binary and triple query atoms--> 
+The rest of thequery atoms are represented as edges between nodes. To add such queryatom to the graph one must add an edge between the desired two nodes.To delete edge query atoms use delete selection. Details about addingand deleting an edges can be found in the Query Graph section. If thereis a supported query atom between the nodes an edge query atom iscreated. In the case of binary query atoms an edge with default queryatom is created. The default value depends on the edge type. Editingthis query atoms is done by double clicking the edge. An in-placeeditorwill popup. Select the desired query atom from the list ofradiobuttons and click the apply button. Editing a property value atomis done by selecting the compound edge. An property value editorappearson the right of the graph. Use the editor to change the list ofproperties used in this query atom and click the apply button. </p>
+
+
+<a name="Conversion rules"><h2>Conversion rules</h2></a>
+<p>&nbsp;&nbsp;&nbsp; The conversion of the query between graph, sparql and then again graph can change the graph (remove some of the nodes or addsome query atoms). This is because the graph that was converted inSPARQL contained nodes that were not used in any query atom. Theconversions separates the unused nodes in two categories constant andvariable nodes. Constant nodes are ignored. So the graph will notcontain any unused constant nodes after the switching from graph tosparql and back to graph. For variable nodes query atoms are added thatinclude so that the nodes are no longer unused. For abox variable nodesan "instance of" query atom with type argument OWLThing is added. Fortbox variable nodes a "subclass of" query atom is add with its secondargument OWLThing. For rbox variable nodes "subproperty of" query atomis added with its second argument TopObjectProperty. The change in thegraph is that new OWLThing constant tbox node and new TopObjectPropertyconstant rbox node are added (if they weren't present in the graph).Edges are added from unused abox nodes to the OWLThing node, fromunused tbox variable nodes to OWLThing node and from unused rboxvariable nodes to TopObjectProperty. </p>
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+      <td><img alt="SPARQL view" src="screenshots/transform_step1.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Graph before conversion</caption>
+</table>
+<table class="img_with_caption" align="center">
+  <tbody>
+    <tr>
+      <td><img alt="SPARQL view" src="screenshots/transform_step2.png" /></td>
+    </tr>
+    </tbody>
+<caption align="bottom">Graph after conversion</caption>
+</table>
+<a name="The query graph graphical representation"><h2>The query graph graphical representation</h2></a>
+<p> The SPARQL-DL query is represented asa list of query atoms. There are three ways to represent query atomsbased on the arity of the atom. Edge query atoms can be create betweentwo nodes of the same type (shape) and between an abox node and tboxnode. The edge query atoms in the graph have a description label(stereotype) which is the name of the query atom. The visual appearanceof the line and decoration at the end is changed to visually </p>
+
+</body></html>

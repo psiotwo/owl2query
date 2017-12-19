@@ -1,0 +1,35 @@
+SELECT  ?y ?x
+WHERE
+  { ?y  <http://www.w3.org/2000/01/rdf-schema#subPropertyOf>  <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#memberOf> .
+    ?x  ?y                    <http://www.Department0.University0.edu> ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Person> .
+  }
+
+# LayoutStore
+# GraphLayout CurrentLayout
+# 1 ABox 0.0 60.0 944.0 329.0
+# 1 0 "x" 36.0 98.0 77.0 33.0
+# 1 3 "y" 148.0 22.0 77.0 33.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Person" 28.0 22.0 97.0 33.0
+# 1 RBox 144.0 0.0 800.0 55.0
+# 3 0 "x" 8 "http://www.Department0.University0.edu" 122.0 96.0 77.0 33.0
+# 1 TBox 0.0 0.0 139.0 55.0
+# 1 v 0.0 55.0 944.0 5.0
+# 1 h 139.0 0.0 5.0 55.0
+# 1 6 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#memberOf" 332.0 22.0 125.0 33.0
+# 1 8 "http://www.Department0.University0.edu" 208.0 98.0 237.0 33.0
+# end
+
+# GraphLayout layout1
+# 1 ABox 0.0 60.0 944.0 329.0
+# 1 0 "x" 36.0 98.0 77.0 33.0
+# 1 3 "y" 148.0 22.0 77.0 33.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Person" 28.0 22.0 97.0 33.0
+# 1 RBox 144.0 0.0 800.0 55.0
+# 3 0 "x" 8 "http://www.Department0.University0.edu" 122.0 96.0 77.0 33.0
+# 1 TBox 0.0 0.0 139.0 55.0
+# 1 v 0.0 55.0 944.0 5.0
+# 1 h 139.0 0.0 5.0 55.0
+# 1 6 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#memberOf" 332.0 22.0 125.0 33.0
+# 1 8 "http://www.Department0.University0.edu" 208.0 98.0 237.0 33.0
+# end

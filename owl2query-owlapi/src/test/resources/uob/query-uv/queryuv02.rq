@@ -1,0 +1,13 @@
+# Q2	
+# This query shows that the core evaluation strategy is advantageous even for the cases when there is just a single core - even the simplest one.
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ub: <http://uob.iodt.ibm.com/univ-bench-dl.owl#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#> 
+
+SELECT *
+WHERE {
+	?X ub:teacherOf ?Z . 
+	_:a ub:takesCourse ?Z .
+}

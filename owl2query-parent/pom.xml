@@ -1,0 +1,95 @@
+<!--
+  ~ Copyright (c) 2012 Czech Technical University in Prague.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the GNU Lesser Public License v2.1
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cz.cvut.kbss</groupId>
+    <artifactId>owl2query-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>OWL2Query Parent POM</name>
+    <version>0.4.0</version>
+    <scm>
+        <connection>scm:svn:http://krizik.felk.cvut.cz/km/owl2query/owl2query/trunk</connection>
+        <url>http://krizik.felk.cvut.cz/km/owl2query</url>
+    </scm>
+    
+    <distributionManagement>
+        <repository>
+            <id>krizik</id>
+            <url>scp://krizik.felk.cvut.cz/var/www/m2repo/</url>
+        </repository>
+        <site>
+            <id>owl2queryprotege</id>
+            <name>OWL2QueryProtege</name>
+            <url>http://owl2query.sourceforge.net</url>
+        </site>
+        <downloadUrl>http://sourceforge.net/projects/owl2query/files/</downloadUrl>
+      </distributionManagement>
+    <repositories>
+        <repository>
+            <id>krizik</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://krizik.felk.cvut.cz/m2repo</url>
+        </repository>       
+    </repositories>
+    <developers>
+        <developer>
+            <name>Petr Křemen</name>
+            <email>petr.kremen@fel.cvut.cz</email>
+            <url>http://cyber.felk.cvut.cz/people</url>
+            <organization>Czech Technical University in Prague, Knowledge Based and Software Systems Group
+            </organization>
+            <organizationUrl>http://krizik.felk.cvut.cz</organizationUrl>
+        </developer>
+        <developer>
+            <name>Bogdan Kostov</name>
+            <email>kostobog@fel.cvut.cz</email>
+            <url>http://cyber.felk.cvut.cz/people</url>
+            <organization>Czech Technical University in Prague, Knowledge Based and Software Systems Group
+            </organization>
+            <organizationUrl>http://krizik.felk.cvut.cz</organizationUrl>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>LGPL 2.1</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+            <comments>see license.txt</comments>
+        </license>
+    </licenses>
+    <organization>
+        <name>Knowledge-based and Software Systems Group, Department of Cybernetics, Faculty of Electrical Engineering,
+            Czech Technical University in Prague
+        </name>
+        <url>http://kbss.felk.cvut.cz</url>
+    </organization>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.2</version>
+            </extension>
+        </extensions>
+    </build>
+</project>

@@ -1,0 +1,32 @@
+SELECT  ?z ?y ?x
+WHERE
+  { ?x  ?y                    ?z .
+    ?z  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Course> .
+    ?x  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#GraduateStudent> .
+  }
+# LayoutStore
+# GraphLayout CurrentLayout
+# 1 ABox 0.0 74.0 944.0 315.0
+# 1 RBox 344.0 0.0 600.0 69.0
+# 3 0 "x" 0 "z" 130.0 114.0 77.0 33.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Course" 222.0 34.0 97.0 33.0
+# 1 TBox 0.0 0.0 339.0 69.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#GraduateStudent" 8.0 30.0 145.0 33.0
+# 1 v 0.0 69.0 944.0 5.0
+# 1 0 "x" 44.0 114.0 77.0 33.0
+# 1 h 339.0 0.0 5.0 69.0
+# 1 0 "z" 234.0 114.0 77.0 33.0
+# end
+
+# GraphLayout layout0
+# 1 ABox 0.0 74.0 944.0 315.0
+# 1 RBox 344.0 0.0 600.0 69.0
+# 3 0 "x" 0 "z" 130.0 114.0 77.0 33.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Course" 222.0 34.0 97.0 33.0
+# 1 TBox 0.0 0.0 339.0 69.0
+# 1 4 "http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#GraduateStudent" 8.0 30.0 145.0 33.0
+# 1 v 0.0 69.0 944.0 5.0
+# 1 0 "x" 44.0 114.0 77.0 33.0
+# 1 h 339.0 0.0 5.0 69.0
+# 1 0 "z" 234.0 114.0 77.0 33.0
+# end

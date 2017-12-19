@@ -1,0 +1,12 @@
+PREFIX benchmark: <http://uob.iodt.ibm.com/univ-bench-lite.owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+
+SELECT ?x
+WHERE { 
+	?x benchmark:isCrazyAbout _:a . 
+	?y benchmark:isCrazyAbout _:a .
+#	?x owl:differentFrom ?y .
+}
+
+# Description:  All pairs of people that are crazy about the same thing.

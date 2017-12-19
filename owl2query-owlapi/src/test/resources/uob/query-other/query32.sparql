@@ -1,0 +1,33 @@
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ub: <http://uob.iodt.ibm.com/univ-bench-dl.owl#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#> 
+
+SELECT *
+WHERE {
+# This query is a deadlock for the NEW engine. Unfortunately, some of the 
+# DV edges is evaluated first and the core evaluation needs a consistency check 
+# for each of the bindings, since Student is NOT in the label of the respective vertex in the completed ABox.
+# The old engine finishes in several seconds.
+#	?X ub:takesCourse ?Z .
+#	?X ub:advisor _:a .
+#	_:a rdf:type ub:Student .	
+#	_:a ub:teacherOf ?Y .
+#	?X ub:takesCourse ?Y .
+	
+# ?X ub:takesCourse _:b.
+ #?X rdf:type _:a.
+ #_:a owl:intersectionOf (ub:GraduateStudent _:d).
+ #_:d rdf:type owl:Restriction .
+ #_:d owl:onProperty ub:takesCourse .
+# _:d owl:allValuesFrom owl:Nothing .
+
+# Test of the preprocessing - datatype property
+#	?X ub:advisor _:a .
+#	?X ub:researchInterest ?Y .
+#	_:a ub:researchInterest ?Y .
+
+# Test of the preprocessing - disjoint range x domain
+#	?X ub:advisor _:a .
+#	_:a ub:teacherOf ?X .
+}

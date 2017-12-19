@@ -1,0 +1,23 @@
+# Q8
+# get all students that are taught by, have published st. and are teaching with someone from the same university part. Also include advisors of such students.
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ub:   <http://uob.iodt.ibm.com/univ-bench-dl.owl#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#> 
+
+SELECT *
+WHERE {
+	?X ub:isMemberOf ?R .
+	?A ub:teacherOf ?Z2 .
+	?A ub:isMemberOf ?R .
+	?X rdf:type ub:GraduateStudent.
+	?X ub:takesCourse ?Z .
+	?A ub:teacherOf ?Z .
+	?X ub:isAdvisedBy ?B .
+	?X ub:teachingAssistantOf ?Z2 .
+	_:a ub:publicationAuthor ?X .
+	_:a ub:publicationAuthor ?A .
+	?W rdf:type ub:University.
+	?R ub:subOrganizationOf ?W.
+}

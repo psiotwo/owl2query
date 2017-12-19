@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cz.cvut.kbss</groupId>
+    <artifactId>owl2query</artifactId>
+    <version>0.4.0</version>
+    <packaging>pom</packaging>
+
+    <name>OWL2Query</name>
+    <description>SPARQL-DL^NOT query engine for OWL 2</description>
+    <url>http://owl2query.sourceforge.net</url>
+
+    <modules>
+        <module>owl2query-parent</module>
+        <module>owl2query-api</module>
+        <module>owl2query-engine</module>
+        <module>owl2query-owlapi</module>
+        <!--<module>owl2query-protege-plugin</module>-->
+    </modules>
+   
+    <distributionManagement>
+        <repository>
+            <id>kbss</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://kbss.felk.cvut.cz/m2repo</url>
+        </repository>
+        <site>
+            <id>owl2query</id>
+            <name>OWL2Query</name>
+            <url>http://owl2query.sourceforge.net</url>
+        </site>
+        <downloadUrl>http://sourceforge.net/projects/owl2query/files/</downloadUrl>
+    </distributionManagement>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <scm>
+      <connection>scm:https://kbss.felk.cvut.cz/gitblit/r/owl2query</connection>
+    </scm>
+    <organization>
+        <name>Czech Technical University in Prague, Knowledge Based and Software Systems Group</name>
+        <url>http://kbss.felk.cvut.cz</url>
+    </organization>    
+</project>

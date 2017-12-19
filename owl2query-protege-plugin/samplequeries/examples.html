@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head>
+  <title>JOPA</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="description" content="OWL2Query -- An expressive query engine for OWL2" /> 
+  <meta name="keywords" content="OWL, ontology" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+<div id="main">
+	<div id="header"></div>
+	<div id="menu">
+		<div class="left">
+			<ul>
+				<li class="active"><a href="index.html">Intro</a></li>
+				<li><a href="examples.html">Screenshots</a></li>
+				<!--li><a href="screenshots.html">Screenshots</a></li-->
+				<!--li><a href="downloads.html">Downloads</a></li-->
+				<!--li><a href="documentation.html">Documentation</a></li-->
+			</ul>
+		</div>
+		
+		<div class="right">
+			<ul>
+				<li><a href="contacts.html">Contacts</a></li>
+			</ul>
+		</div>
+	</div> <!-- end of menu -->
+
+	<div id="body">
+		<div id="title">Screenshots</div>
+<p>Here are three query
+examples. In the screen shots we show the plug-in integrated in
+protege 4.1. The query is drawn in the graph area and it is executed
+with the pellet reason. The name of the file that is currently
+associated with the query is shown in the title at the top of the
+tab. The tool bar under it contains tools as : demo query , new query
+, open query, save query, switch between graph and SPARQL view, undo
+and redo graph changes. On the next line in the GUI we have a split
+view that contains on the left prefix editor and on the right a tab
+view with var editor and layout editor. Under this view there is the
+graph area. On the right side of the graph area we can see a node
+editor. Under the graph is a serialization of the query in SPARQL-DL
+syntax. Last row in the GUI is the result area with a run button and
+a result table. On the right of the screen-shots we can see other
+protege views. They are present to show selection integration between
+the plug-in and other parts of protege.</p>
+
+<p><B>Example 1</B><p>
+<p>The first query is used
+to find all the graduate students that are related to a course and
+find what kind of relationship. It is a mixed ABox Rbox query. In
+SPARQL-DL this query is written in using two type atoms and
+a property value atom: 
+<p>
+<p>Q(z, y, x) :-<p>
+<p>PropertyValue(?y, ?x,
+?z),<p>
+<p>Type(&lt;Course&gt;, ?z),<p>
+<p>Type(&lt;GraduateStudent&gt;,
+?x).<p>
+<p><BR>
+<p>
+<p><IMG SRC="queryexamples/sparqlexampl1.PNG" ALT="example1" BORDER=0><BR CLEAR=LEFT><BR>
+<p>
+<p>In the graph in the ABox
+area we have the property value query atom. It is represented using
+two ABox nodes for the subject and object of the property and an
+arrow that goes through the property node witch represents the
+property it self. Arrows with &quot;type&quot; stereotype to a TBox
+nodes in the TBox area represent the type atoms in the query. The red
+color represents a variable. The yellow color is used to represent
+constants. Selection GraduateStudent97 in the result table is update
+also in the protege. On the right in the protege's Idividuals view we
+can see that individual GraduateStudent97 is also selected. 
+<p>
+<p><BR>
+<p>
+<p><B>Example2</B><p>
+<p>This query is used to
+find all the students who are also employees and find what kind of
+employee. This is a mixed ABox TBox query. In SPARQL-DL the query is
+represented with two type atoms and one sub class of atom:<p>
+<p>Q(C, x) :-<p>
+<p>Type(?C, ?x),<p>
+<p>T(&lt;Student&gt;, ?x),<p>
+<p>SubClassOf(?C,
+&lt;Employee&gt;).<p>
+<p><BR>
+<p>
+<P ALIGN=CENTER STYLE="margin-bottom: 0cm"><IMG SRC="queryexamples/sparqlexampl2.PNG" ALIGN=LEFT BORDER=0><BR CLEAR=LEFT><BR>
+<p>
+<p>As in the first example
+the type atoms are represented as arrows from a ABox node to a TBox
+node with a &quot;type&quot; stereotype. The Subclass atom is
+represented as an arrow from the variable TBox node to a constant
+TBox node with stereotype &quot;SubClassOf&quot;. Note column
+selection in the result table is the same as the selection in the
+graph and the variable editor.<p>
+<p><BR>
+<p>
+<p><B>Example3</B><p>
+<p>This query is used to
+find all the members of Depatment0 and what kind of membership. This
+is a mixed ABox RBox query as the first example, but this time we add
+constraints to the property node in the RBox area. In SPARQL-DL the
+query has one type atom, one property value atom and one sub property
+atom:<p>
+<p>Q(y, x) :-<p>
+<p>SubPropertyOf(?y,
+&lt;memberOf&gt;),<p>
+<p>PropertyValue(?y,?x,&lt;Department0&gt;),<p>
+<p>Type(&lt;Person&gt;, ?x).<p>
+<p><BR>
+<p>
+<p><IMG SRC="queryexamples/sparqlexampl3.PNG" NAME="obrázky3" ALIGN=LEFT BORDER=0><BR CLEAR=LEFT><BR>
+<p>
+<p>In the graph the sub
+property of atom is represented as an arrow between two rbox nodes in
+the RBox area with a &quot;SubPropertyOf&quot; stereotype. This graph
+has two nodes that contain the label representing the variable y.
+This means that the nodes reference the same term from different
+parts of the query. This fact is represented in the graph
+interactively. When the user tries to interact with the node the
+node's borders that reference the same term are emphasized. Also a
+dashed line drawn to the other nodes using the same term.<p>
+	</div>
+
+	<div id="footer">
+		<div class="left">Last change: 2011-3-16</div>
+		<div class="right"><a href="http://cyber.felk.cvut.cz">Department of Cybernetics, Faculty of Electrical Engineering @ CTU in Prague</a></div>	
+	</div>
+</div>
+</BODY>
+</HTML>

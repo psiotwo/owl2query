@@ -1,0 +1,102 @@
+The protege plugin.
+word ambiguities view vs protege view
+view is used for swing containers such as scroll and split panes and panels
+protege view is meant
+The protege plugin is implemented as a protege view. 
+//Layout:
+On the top as all othe protege views is the title. The components in the view under the title are arranged in rows. 
+First row is the toolbar, whitch contains demo, new, open and save query buttons. Next to them are two radio buttons used to switch between the graph view and the sparql view. The last two tools in the toolbar are the undo redo buttons.
+The next row, under the toolbar dinamicaly changes when depending on the current view, graph view or sparql view. If the graph view is selected the row is splited with a vertical split bar. On the left of the bar the prefix editor is located. On the right of the bar we have a tabbed pane containing two panels, the variable editor and the graph layout editor. When the SPARQL view is selected the split bar and the left panel containing the tabbed view are removed from the row. As a result only the prefix editor is visble in the SPARQL view.
+Under the SPARQL view we have the query view. Here the same query is visualized as a graph or serialized in SPARQL syntax depending on the radio button selection in the tool bar on top of the view. The graph view weher we edit the query using the node editors, edge editors, mouse gestures and keyboard keys. The SPARQL view is a simple text editor.
+Beneeth the query view, there is one text line row used to show the query in simple SPARQL-DL syntax. This row is shown in both graph and SPARQL views.
+The last row in the plugin is the result view. On top of the view is the run/stop button for the query execution. Under it is the result table.
+
+
+//Prefix editor
+The prefix editor is capable of editing the short form of the prefix and to toggle the usage of the short form of the prefix in other plugin components. This is organised in a table the rows of whitch are the individual prefixes. The table has three columns. The first column in the table represents the usage state of the given prefix, it is shown as a checkbox component. The second column is rendered as text field and represents the full prefix value. This field is not editable. The third is also rendered as a text field and it represents the short form of the prefix. This filed is editable. On top of the table there are four buttons. The first two buttons are used to manipulate the usage column. The first button is inverts the usage column. The second selects all the checkboxes in the usage column, makse all the prefixes to be used. The last two buttons are used to restore the default values of the short from of the prefixes. Using the first of these two buttons will restore only the selected (heighlight ted) rows in the table and the second will restore all rows. The prefix editor contains logic to ensure the concistency of the short form prefixes(uniqu value for each row in the last column in the table).
+
+//Variable editor
+The variable editor organises the variables in a table. Each row in the table represents one variable. The first column is the name or the lable of the variable. This column is represented as a not editable text field. The other five columns are rendered as a checkbox. Second Column represents wether the variable is destinguished. This column is editable if the variable is used unly in the abox. The third column shows wether the variable is a result variable. This column is editable if the variable is destinguished. The last three columns represent in what boxes it is beeing used, abox, tbox, abox. The varible can be used in all of the boxes at the same time and must be used in at least one so all three columns can be check but at leat one must be checked. This three colunms are never editable.
+
+//layout editor
+the layout editor manages the layouts that are being asociated with the query. The list shows the names of the layouts. The names of the layouts can be edited. Under the list there are three buttons snapshot, apply and delete. The snapshot button saves the current layout of the graph into a new layout and adds it to the list. The apply button uses the selected layout in the list to arrange the nodes in the graph. The dlete button deletes all the selected layouts in the list. Layouting the graph using the apply button will change only nodes that were part of the graph at the time when the layout was created using the snapshot button. New nodes create after the time the layout was created will not change.
+
+//Resut panel
+The result panel has two components a run/stop button at the top and a table in whitch the results are shown. The run/stop button is disabled if the there is not a selected and started reasoner in the protege. If the button is enabled it runs the query and changes the button to a stop button. If the query takes too long to execute one can stop the execution by clicking the button. Doiog so will cause the plugin to try to stop the reasoner. After the exectution is completed the button changes back to a run button. After a successfull execution the result table is filled with the result of the query. The columns in the table represent the result variables and the rows are the different bindings of the result variables in the query. The table is view only, no editing is supported.
+
+//QueryGraph 
+Here only basic functionality of the graph will be explained. Creating concrete query atoms and more ditailed explanation of the functionnality will be explained later. The graph editor has three ways in which one can edit the graph. 
+The most intuitive one is interacting with the graph area using mouse gestures and the keyboard. By interacting with the graph we can move nodes and manualy layout the graph. This however does not change the query it self. To chage the query we can add and remove nodes and edges. To add a abox variable node simply doubleclick somewere in the free abox area in the graph (where there are no nodes and edges). Creating tbox and rbox variables is the same, doubleclick on the area where you wish to create a variable. 
+Adding edges is only possible when you have two nodes. To add and edge place the mosue cursor anywhere near the border of the node. The cursor changes to the edge tool currsor if the node can have edges. If the cursor changed press the right mouse button and dragg to the node you wish to connect to. When the cursor is over the target node it will change the cursor. If the edge you are trying to create is correct an the cursor changes to accept edge cursor, releasing the mouse button will cause the edge to be created. If the target node is not connectable to the source node (the one that the drag was started on) the cursor is changed to deny edge cursor. Releasing the pressed button will not do anything. In the case of abox edge (edge that both nodes are abox nodes) a popup menu will be shone where we can choose the type of edge we want to create. Deleting is done with the delete key on the keybord. When the delete is pressed the selection in the graph is deleted. If the selection was a node all the edges that are connected to the node are deleted.
+The other way to edit the graph is by editig the already created nodes and edges. The nodes are edited in the node editor. To edit a node single node is selected in the graph. The editor will apear on the right side in the graph view. The editor changeds upon graph selection and hides if the selection is empty or more than one elements are selected. When editing a node in the node editor it is nesecery to press the apply button at the bottom in order to apply changes. To edit an edge simply double click  the edge. A in place editor will popup at the at the point that was clicked. To aply the changes the apply button at botton in the editor must be clicked.
+
+//SPARQL query view
+The qeury can be also serialized in the SPARQL format. This is done by selecting the SPARQL radio button in the main toolbar of the plugin. The Sparql view consists of a simple text editor containing the query representedin sparql format. The conversion of the query between graph, sparql and then again graph can change the graph (remove some of the nodes or add some query atoms). This is because the graph that was converted in SPARQL contianed nodes that were not used in any queruy atom. The conversions separetes the unsused nodes in two categories constant and variable nodes. Constant nodes are ignored. So the graph will not contain any unused constant nodes after the switching from graph to sparql and back to graph. For variable nodes query atoms are added that include so that the nodes are nologer unused. For abox variable nodes an "instance of" query atom with type argument OWLThing is added. For tbox variable nodes a "subclass of" query atom is add with its second argument OWLThing. For rbox varible nodes "subproperty of" query atom is added with its second argument TopObjectProperty.
+The change in the graph is that new OWLThing constant tbox node and new TopObjectProperty constatnt rbox node are added (if they weren't present in the grpah). Edges are added from unused abox nodes to the OWLThing node, from unused tbox variable nodes to OWLThing node and from unused rbox variable nodes to TopObjectProperty.
+
+
+
+
+//Making query atoms
+The SPARQL-DL query is represented as a list of query atoms(graph representation). When creating a query graph one have to create the graphical representation of the query atoms (in most cases they are represented as edges in the graph). 
+//unary
+There are two ways to create query atoms. Unary query atoms (for now unary query atoms are present only in the RBox) are represented as letters in the description of a node. To create, add or delete a unary(rbox) query atom double click an rbox node. The rbox node editor will apear select the desired query atoms from the list of checkboxes. Here is an screenshot of the editing(img)
+//binary and triple query atoms
+The rest of the query atoms are represented as edges between nodes. To add suhch query atom to the graph one must add an edge between the desired two nodes. To delete edge query atoms use delete selection(graph interacion). Ditails about adding and deleting an edge can be found in the (//querygraph adding edge). If there is a supported query atom between the nodes an edge query atom is created. In the case of binary query atoms an edge with default query atom is created. The default value depends on the edge type. Editing this query atoms is done by double clicking the edge. An inplace editor will popup. Select the desiered query atom from the list of radiobuttons and click the apply button. Editing a property value atom is done by selecting the compound edge. An property value editor apears on the right of the graph. Use the editor to change the list of properties used in this query atom and click the apply button. 
+
+//query graph element editors - layout and functional explanation
+//Edge Editors
+The edge editors are basicaly query atom choosers. The query atom list in the editor cahnges based on the type of edge that is beeing edited. The chages are applied after the apply button at the bottom of the form is clicked.
+//screen shots abox , tbox, abox-tbox, rbox
+//property value editor
+The property value editor is basicaly a property list editor. We can add named object or data properties to the list by using the current selection tree. 
+The slection tree represents the hierarchy of object or data properties. We can switch between the two treesusing  the radio object and data buttons at the top of the editor. If any part of the query asumes that the node that represents the object of the property value query atom (the node that the arrow points to) eather a object property or data property the editor is constraind. In this case the editor is constrained to make consistent chages and therefore one of the radiobuttons is disabled.
+To add new rbox variable not present in the query click the text filde, type the new variable name and press enter.
+To add a existing rbox variable to the list click the arow button on the right of the text field. A popup list of existing rbox query variables shows. Select the check box next to the disired variables and click somewere in the property value editor to hide the popup.
+To remove entries from the list simpli click the red cross next to the entry or select the desiered rows in the list and then click the remove selection button under the list.
+To apply the changes click the apply button at the bottom of the editor.
+
+//Variable node editor
+The varible editor can only change the variable name of the node. The filde must contain a correct value in order to be able to apply the change.
+
+//Abox node editor
+The abox node editor three views variable, individual and literal. One can switch between the view using the radiobuttons at the top of the editor.
+	//Variable node editor
+	The varible editor can only change the variable name of the node. The filde must contain a correct value in order to be able to apply the change.
+The individual editor is used to select the individual that the node will represent. This is done using the single selection list. By selection is meant a radio button selection. A value must be selected in order to be able to apply the changes made. For easier location in the list of individuals they are alphabeticaly ordered. Another feature is that the selection in the class hierarchy tree will filter the individual list. Instances of the selected class will apear on top of the list and the rest of the individuals will be graycolored. The text filde under the selection list shows the selected indvidual if any. Clicking on the field the list will scroll to the choosen individual.
+In the literal editor 
+Use the the data type hierarchy to select a data type if desired. 
+Use the text field to enter the literal value. This vilde is mandatiry, it must contain a value.
+//TBox Node editor
+The tbox node editor has to view varible editor and constant editor. Switching between the view is done using the radiobuttons at the top of the editor
+	//Variable node editor
+	The varible editor can only change the variable name of the node. The filde must contain a correct value in order to be able to apply the change.
+//Constant editor
+The constant editor is used to select an uri from the object or data property hierarchy single selection trees. The hierarchy tree is selected using the object and data property radiobuttons. Selection in the tree is also shown in the "Selected Type" text field. Clicking the field will expand and scroll the tree to the selected property.
+//RBox Node editor
+The rbox node editor has two view a variable editor and a constant view. The can switch betweeb the view using the variable and constant radio buttons. 
+	//Variable node editor
+	The varible editor can only change the variable name of the node. The filde must contain a correct value in order to be able to apply the change.
+The constant editor is used to select a property uri from the object or data property hierarchy single selection tree. The tree hierarchy can be switched by selecting the object properties or the data properties radio buttons.
+The selection in the tree is also show in the Selected Property text field. By clicking this field the tree is expanding and scroling to the selected value if it is not visible.
+In each view at the bottom of the rbox editor there is a checkbox list of property attributes. They represent unary rbox query atoms. A short representation of the attribute labels is shown in the paranthese. This short representation is used in the rbox node labels to visualize the properties attributes	. The list of attributes is filtered in the different views of the editor or if the DataProperty atribute is selected in the variable view. The selection of the list is also constrained. Non of the next couples of attributes can be selected simultaneosly : DatatypeProperty-ObjectProperty, Symmetric-Asymmetric, Irreflexive-Reflexive. If the constraints are violited the older selection of the conflicted attributes will be cleared. For example by selecting the Symmetric attribute the Asymmetric will be cleared if it was already selected. 
+To apply the changes click the apply button.
+
+The user interface will filter the query atoms that are acceptable between the nodes. There is only one triple query atom supported im SPARQL-DL, this is the property value atom. This type of query atoms can be created as edge query atoms between two abox nodes. The starting abox node must be varible or a individual.
+
+
+
+//SPARQL-DL graphical representation
+The SPARQL-DL query is represented as a list of query atoms. There are three ways to represent query atoms based on the arity of the atom. 
+Edge query atoms can be create between two nodes of the same type (shape) and between an abox node and tbox node.
+The edge query atoms in the graph have a description label (stereotype) whitch is the name of the query atom. The visual apearence of the line and decoration at the end is changed to visualy 
+
+The table contains logic to ensure the consistency of the short form
+On the top of the prefix editor there are for buttons. The first two b
+
+
+
+
+
+
+in whitch the each column represents one variable in the query and each row represents the 

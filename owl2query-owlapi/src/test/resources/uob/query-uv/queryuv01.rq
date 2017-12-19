@@ -1,0 +1,16 @@
+# Q1	
+# This query is a deadlock for the OLD engine. The new finishes in ~4 sec.
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ub: <http://uob.iodt.ibm.com/univ-bench-dl.owl#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#> 
+
+SELECT *
+WHERE {
+	?X ub:isMemberOf ?Z .
+	?X ub:isAdvisedBy _:a .
+	_:a rdf:type ub:Employee . 
+	_:a ub:teacherOf ?Y .
+	?X ub:takesCourse ?Y .
+}

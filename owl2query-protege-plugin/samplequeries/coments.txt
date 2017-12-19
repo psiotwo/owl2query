@@ -1,0 +1,28 @@
+Here are trhee query examples. In the screen shots we show the plugin integrated in protege 4.1. The query is drawn in the graph area and it is executed with the pellet reasone. The name of the file that is curently asociated with the query is shown in the title at the top of the tab. The tool bar under it contains tools as : demo query , new query , open query, save query, switch between graph and SPARQL view, undo and redo graph changes. On the next line in the gui we have a split view that contains on the left prefix editor and on the right a tab view with var editor and layout editor. Under this view there is the graph area. On the right side of the graph area we can see a node editor. Under the graph is a serialization of the query in SPARQL-DL syntax. Last row in the gui is the result area with a run buttoon and a result table. On the right of the screenshots we can see other protege views. They are present to show selection integration betwwen the plugin and other parts of protege.
+
+Example 1
+The first query is used to find all the graduate students that are related to a course and find what kind of relationship. It is a mixed ABox Rbox query. In SPARQL-DL this this query is writen in 
+using two type atoms and a property value atom: 
+Q(z, y, x) :-
+PropertyValue(?y, ?x, ?z),
+Type(<Course>, ?z),
+Type(<GraduateStudent>, ?x).
+
+In the graph in the ABox area we have the proprty value query atom. It is represented using two abox nodes for the subject and object of the property and an arrow that goes through the property node witch represents the property it self. Arrows with "type" stereotype to a tbox nodes in the TBox area represent the type atoms in the query. The red color represents a variable, so it is easear to orient what we are looking for. The yellow color is used to represent constants. Selection GraduateStudent97 in the result table is update also in the protege. On the right in the protege's Idividuals view we can see that individual GraduateStudent97 is also selected. 
+
+Example2
+This query is used to find all the students who are also employees and find what kind of employee. This is a mixed abox tbox query. In sparql-dl the query is represented with two type atoms and one sub class of atom:
+Q(C, x) :-
+Type(?C, ?x),
+T(<Student>, ?x),
+SubClassOf(?C, <Employee>).
+As in the first examle the type atoms are represented as arrows from a abox node to a tbox node with a "type" stereotype. The Subclass atom is represented as an arrow from the variable tbox node to a constant tbox node with stereotipe "subclassof". Note column selection in the result table is the same as the selection in the graph and the variable editor.
+
+
+Example3
+This query is used to find all the members of Depatment0 and what kind of membership. This is a mixed abox rbox query as the first example, but this time we add constraints to the property node in the RBox area. In SPARQL-DL the query has one type atom, one property value aotm and one sub property atom:
+Q(y, x) :-
+SubPropertyOf(?y, <memberOf>),
+PropertyValue(?y,?x,<http://www.Department0.University0.edu>),
+Type(<Person>, ?x).
+In the graph the sub property of atom is represented as an arrow between two rbox nodes in the RBox area with a "SubPropertyOf" stereotype. This graph has two nodes that contain the lable representing the variable y. This means that the nodes referens the same term from different parts of the query. This fact is represented in the graph interactivly. When the user tries to interact with the node the node's borders that reference the same term are emphasised. Also a dashed line drwan to the other nodes using the same term.
