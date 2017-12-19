@@ -14,8 +14,8 @@
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.parser.arq;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 public class SparqlDL {
 

@@ -4,7 +4,6 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
@@ -14,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChangeException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import cz.cvut.kbss.owl2query.engine.OWL2QueryEngine;
 import cz.cvut.kbss.owl2query.model.OWL2Query;
@@ -22,10 +20,12 @@ import cz.cvut.kbss.owl2query.model.OWL2QueryFactory;
 import cz.cvut.kbss.owl2query.model.QueryResult;
 import cz.cvut.kbss.owl2query.model.Variable;
 import cz.cvut.kbss.owl2query.model.owlapi.OWLAPIv3OWL2Ontology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NotTests extends TestCase {
 
-	private static final Logger LOG = Logger.getLogger(TestCase.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NotTests.class);
 
 	final String BASE_URI = "http://krizik.felk.cvut.cz/";
 
@@ -78,7 +78,7 @@ public class NotTests extends TestCase {
 			// evaluation
 			final QueryResult<OWLObject> qr = OWL2QueryEngine.exec(q);
 
-			LOG.info(qr);
+			LOG.info(qr.toString());
 			assertEquals(8, qr.size());
 		} catch (OWLOntologyCreationException e) {
 			e.printStackTrace();

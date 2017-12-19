@@ -12,7 +12,7 @@
  * details. You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.hp.hpl.jena.sparql.serializer;
+package org.apache.jena.sparql.serializer;
 
 import java.io.OutputStream;
 
@@ -20,13 +20,14 @@ import org.apache.jena.atlas.io.IndentedLineBuffer;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.atlas.logging.Log;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.Syntax;
-import com.hp.hpl.jena.sparql.util.NodeToLabelMapBNode;
+import org.apache.jena.graph.Node;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.sparql.util.NodeToLabelMapBNode;
+import org.apache.jena.system.Serializer;
 
 public class MySerializer{
-		
+
 	static public void serializeARQ(Query query, IndentedWriter writer)
     {
 		//Serialization Context that preserves b node labels
@@ -149,7 +150,7 @@ public class MySerializer{
 //            return ;
 //        }
         
-        Log.warn(Serializer.class,"Unknown syntax: "+outSyntax) ;
+        Log.warn(Serializer.class,"Unknown syntax: " + outSyntax) ;
     }
      
     //changed to public

@@ -29,7 +29,7 @@ public class TestQuerySupport {
 
     {
         try {
-            factory = (OWLReasonerFactory) Class.forName("com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory").newInstance();
+            factory = (OWLReasonerFactory) Class.forName("openllet.owlapi.OpenlletReasonerFactory").newInstance();
         } catch (ClassNotFoundException e) {
             factory = null;
             e.printStackTrace();
@@ -224,7 +224,7 @@ public class TestQuerySupport {
     public void testQueryIO() {
         final OWL2Query<OWLObject> q = ont.getFactory().createQuery(ont);
         q.addResultVar(varX).addResultVar(varY).InverseOf(varX,varY);
-        runQuery(q,2);
+        runQuery(q,3); // <bottomObject,bottomObject> ; <topObject,topObject> ; <p,inv(p)>
     }
 
 

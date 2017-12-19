@@ -14,10 +14,10 @@
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.parser.arq;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.OWL;
 
 public class OWL2 extends OWL {
 	final public static Resource minQualifiedCardinality = ResourceFactory

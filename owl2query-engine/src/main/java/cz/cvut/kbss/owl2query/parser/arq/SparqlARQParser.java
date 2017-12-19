@@ -22,26 +22,26 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.ARQ;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.Syntax;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.engine.ExecutionContext;
-import com.hp.hpl.jena.sparql.engine.binding.Binding;
-import com.hp.hpl.jena.sparql.expr.Expr;
-import com.hp.hpl.jena.sparql.function.FunctionEnv;
-import com.hp.hpl.jena.sparql.lang.SPARQLParser;
-import com.hp.hpl.jena.sparql.lang.SPARQLParserFactory;
-import com.hp.hpl.jena.sparql.lang.SPARQLParserRegistry;
-import com.hp.hpl.jena.sparql.syntax.Element;
-import com.hp.hpl.jena.sparql.syntax.ElementBind;
-import com.hp.hpl.jena.sparql.syntax.ElementGroup;
-import com.hp.hpl.jena.sparql.syntax.ElementNotExists;
-import com.hp.hpl.jena.sparql.syntax.ElementPathBlock;
-import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
-import com.hp.hpl.jena.sparql.syntax.PatternVars;
-import com.hp.hpl.jena.sparql.syntax.Template;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.engine.ExecutionContext;
+import org.apache.jena.sparql.engine.binding.Binding;
+import org.apache.jena.sparql.expr.Expr;
+import org.apache.jena.sparql.function.FunctionEnv;
+import org.apache.jena.sparql.lang.SPARQLParser;
+import org.apache.jena.sparql.lang.SPARQLParserFactory;
+import org.apache.jena.sparql.lang.SPARQLParserRegistry;
+import org.apache.jena.sparql.syntax.Element;
+import org.apache.jena.sparql.syntax.ElementBind;
+import org.apache.jena.sparql.syntax.ElementGroup;
+import org.apache.jena.sparql.syntax.ElementNotExists;
+import org.apache.jena.sparql.syntax.ElementPathBlock;
+import org.apache.jena.sparql.syntax.ElementTriplesBlock;
+import org.apache.jena.sparql.syntax.PatternVars;
+import org.apache.jena.sparql.syntax.Template;
 
 import cz.cvut.kbss.owl2query.UnsupportedQueryException;
 import cz.cvut.kbss.owl2query.model.OWL2Ontology;
@@ -97,7 +97,7 @@ public class SparqlARQParser<G> implements QueryParser<G> {
 		}
 	}
 	
-	private OWL2Query<G> parseAskOrSelect(final com.hp.hpl.jena.query.Query sparqlQuery,
+	private OWL2Query<G> parseAskOrSelect(final org.apache.jena.query.Query sparqlQuery,
 			final OWL2Ontology<G> ontology) throws QueryParseException {
 	
 		if (sparqlQuery.isDescribeType())
@@ -123,7 +123,7 @@ public class SparqlARQParser<G> implements QueryParser<G> {
 		return query;
 	}
 	
-	private OWL2Rule<G> parseConstruct(final com.hp.hpl.jena.query.Query sparqlQuery,
+	private OWL2Rule<G> parseConstruct(final org.apache.jena.query.Query sparqlQuery,
 			final OWL2Ontology<G> ontology) throws QueryParseException {
 		if (!sparqlQuery.isConstructType())
 			throw new UnsupportedQueryException(

@@ -22,19 +22,20 @@ import java.util.Map;
 
 import org.apache.jena.atlas.io.IndentedLineBuffer;
 
-import com.hp.hpl.jena.datatypes.BaseDatatype;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.Syntax;
-import com.hp.hpl.jena.rdf.model.AnonId;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.serializer.MySerializer;
-import com.hp.hpl.jena.sparql.syntax.ElementGroup;
-import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.datatypes.BaseDatatype;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.rdf.model.AnonId;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.serializer.MySerializer;
+import org.apache.jena.sparql.syntax.ElementGroup;
+import org.apache.jena.sparql.syntax.ElementTriplesBlock;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 import cz.cvut.kbss.owl2query.UnsupportedQueryException;
 import cz.cvut.kbss.owl2query.engine.InternalQuery;
@@ -86,7 +87,7 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 
 			switch (a.getPredicate()) {
 			case DirectType:
-				p = Node.createURI(BASE_NM + "directType");
+				p = NodeFactory.createURI(BASE_NM + "directType");
 			case Type:
 				if (p == null) {
 					p = RDF.type.asNode();
@@ -120,10 +121,10 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 								.getArguments().get(1), internalQuery)));
 				break;
 			case DirectSubClassOf:
-				p = Node.createURI(BASE_NM + "directSubClassOf");
+				p = NodeFactory.createURI(BASE_NM + "directSubClassOf");
 			case StrictSubClassOf:
 				if (p == null) {
-					p = Node.createURI(BASE_NM + "strictSubClassOf");
+					p = NodeFactory.createURI(BASE_NM + "strictSubClassOf");
 				}
 			case SubClassOf:
 				if (p == null) {
@@ -154,10 +155,10 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 
 				break;
 			case DirectSubPropertyOf:
-				p = Node.createURI(BASE_NM + "directSubPropertyOf");
+				p = NodeFactory.createURI(BASE_NM + "directSubPropertyOf");
 			case StrictSubPropertyOf:
 				if (p == null) {
-					p = Node.createURI(BASE_NM + "strictSubClassOf");
+					p = NodeFactory.createURI(BASE_NM + "strictSubClassOf");
 				}
 			case SubPropertyOf:
 				if (p == null) {
@@ -250,7 +251,7 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 		}
 
 		if (query.getUndistVars().contains(v)) {
-			return Var.createAnon(new AnonId(v.getName()));
+			return Var.alloc("_ANON_"+v.getName());
 		} else {
 			return Var.alloc(var.getName());
 		}
@@ -264,9 +265,9 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 				String s = i.asGroundTerm().getWrappedObject().toString();
 
 				URI uri = URI.create(s.substring(1, s.length() - 1));
-				return Node.createURI(uri.toString());
+				return NodeFactory.createURI(uri.toString());
 			} catch (IllegalArgumentException e) {
-				return Node.createLiteral(i.asGroundTerm().getWrappedObject()
+				return NodeFactory.createLiteral(i.asGroundTerm().getWrappedObject()
 						.toString());
 			}
 		}
@@ -300,17 +301,17 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 					if (lit.charAt(0) == '"')
 						lit = lit.substring(1, lit.length() - 1);
 					if (type != null)
-						return Node.createLiteral(lit, null, new BaseDatatype(
+						return NodeFactory.createLiteral(lit, null, new BaseDatatype(
 								type));
 					else
-						return Node.createLiteral(lit);
+						return NodeFactory.createLiteral(lit);
 				} else {// uri
 					URI uri = URI.create(val);
-					return Node.createURI(uri.toString());
+					return NodeFactory.createURI(uri.toString());
 				}
 
 			} catch (IllegalArgumentException e) {
-				return Node.createLiteral(i.asGroundTerm().getWrappedObject()
+				return NodeFactory.createLiteral(i.asGroundTerm().getWrappedObject()
 						.toString());
 			}
 		}
@@ -325,7 +326,7 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 				if (s.charAt(0) == '<') {
 					s = s.substring(1, s.length() - 1);
 				}
-				return Node.createURI(URI.create(s).toString());
+				return NodeFactory.createURI(URI.create(s).toString());
 			} catch (IllegalArgumentException e) {
 				throw new UnsupportedQueryException(
 						"Concept/role constructs are not supported: "
@@ -341,7 +342,7 @@ public class SparqlARQWriter<G> implements QueryWriter<G> {
 			String uri = p.asGroundTerm().getWrappedObject().toString();
 			if (uri.charAt(0) == '<')
 				uri = uri.substring(1, uri.length() - 1);
-			return Node.createURI(uri);
+			return NodeFactory.createURI(uri);
 			// return Node.createURI(p
 			// .asGroundTerm()
 			// .getWrappedObject()

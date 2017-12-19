@@ -20,15 +20,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.hp.hpl.jena.graph.NodeFactory;
-import com.hp.hpl.jena.query.ARQ;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.engine.ExecutionContext;
-import com.hp.hpl.jena.sparql.engine.binding.Binding;
-import com.hp.hpl.jena.sparql.engine.binding.BindingFactory;
-import com.hp.hpl.jena.sparql.expr.Expr;
-import com.hp.hpl.jena.sparql.expr.NodeValue;
-import com.hp.hpl.jena.sparql.function.FunctionEnv;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.engine.ExecutionContext;
+import org.apache.jena.sparql.engine.binding.Binding;
+import org.apache.jena.sparql.engine.binding.BindingFactory;
+import org.apache.jena.sparql.expr.Expr;
+import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.function.FunctionEnv;
 
 import cz.cvut.kbss.owl2query.model.GroundTerm;
 import cz.cvut.kbss.owl2query.model.OWL2Ontology;

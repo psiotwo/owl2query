@@ -12,17 +12,17 @@
  * details. You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.hp.hpl.jena.sparql.util;
+package org.apache.jena.sparql.util;
 
 import java.util.HashMap ;
 import java.util.Map ;
 import java.util.Set ;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.graph.NodeFactory ;
-import com.hp.hpl.jena.sparql.ARQConstants ;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.core.VarAlloc ;
+import org.apache.jena.graph.Node ;
+import org.apache.jena.graph.NodeFactory ;
+import org.apache.jena.sparql.ARQConstants ;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.core.VarAlloc ;
 
 
 /** Map from _:* form to bNodes */

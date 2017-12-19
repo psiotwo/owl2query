@@ -11,20 +11,17 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.mindswap.pellet.KnowledgeBase;
+import openllet.aterm.ATermAppl;
+import openllet.core.KnowledgeBase;
+import openllet.owlapi.OWLAPILoader;
+import openllet.query.sparqldl.engine.QueryEngine;
+import openllet.query.sparqldl.model.Query;
+import openllet.query.sparqldl.model.QueryResult;
+import openllet.query.sparqldl.model.ResultBinding;
+import openllet.query.sparqldl.parser.ARQParser;
 import org.semanticweb.owlapi.model.*;
 
-import aterm.ATermAppl;
-
-import com.clarkparsia.pellet.owlapiv3.OWLAPILoader;
-import com.clarkparsia.pellet.sparqldl.engine.QueryEngine;
-import com.clarkparsia.pellet.sparqldl.model.Query;
-import com.clarkparsia.pellet.sparqldl.model.QueryResult;
-import com.clarkparsia.pellet.sparqldl.model.ResultBinding;
-import com.clarkparsia.pellet.sparqldl.parser.ARQParser;
-
 import cz.cvut.kbss.owl2query.util.StatisticsUtils;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 public class PelletTester implements GenericOWLAPITester {
 

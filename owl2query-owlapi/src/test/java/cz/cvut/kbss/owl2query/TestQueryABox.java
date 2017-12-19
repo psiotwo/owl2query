@@ -34,7 +34,7 @@ public class TestQueryABox {
 
     {
         try {
-            factory = (OWLReasonerFactory) Class.forName("com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory").newInstance();
+            factory = (OWLReasonerFactory) Class.forName("openllet.owlapi.OpenlletReasonerFactory").newInstance();
         } catch (ClassNotFoundException e) {
             factory = null;
             e.printStackTrace();

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.stream.Collectors;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -226,7 +227,7 @@ public class OWLAPIv3OWL2Ontology implements OWL2Ontology<OWLObject> {
 			} else if (ope.isDataPropertyExpression()) {
 				// return r.getDataPropertyRanges(((OWLEntity)
 				// ope).asOWLDataProperty());
-				return new HashSet<OWLDataRange>(EntitySearcher.getRanges(((OWLEntity) ope).asOWLDataProperty(), o)); // TODO
+				return new HashSet<OWLDataRange>(EntitySearcher.getRanges(((OWLEntity) ope).asOWLDataProperty(), o).collect(Collectors.toList())); // TODO
 			}
 		}
 		throw new InternalReasonerException();
@@ -506,7 +507,7 @@ public class OWLAPIv3OWL2Ontology implements OWL2Ontology<OWLObject> {
 
 		if (!cex.isAnonymous()) {
 			final OWLClass owlClass = cex.asOWLClass();
-			for (final OWLObject x : EntitySearcher.getIndividuals(owlClass, o)) {
+			for (final OWLObject x : EntitySearcher.getIndividuals(owlClass, o).collect(Collectors.toList())) {
 				m.put(x, true);
 			}
 		}
@@ -517,7 +518,7 @@ public class OWLAPIv3OWL2Ontology implements OWL2Ontology<OWLObject> {
 	public Boolean isKnownTypeOf(OWLObject ce, OWLObject i) {
 		final OWLIndividual ii = asOWLNamedIndividual(i);
 
-		if (EntitySearcher.getTypes(ii, o).contains(ce)) {
+		if (EntitySearcher.getTypes(ii, o).collect(Collectors.toList()).contains(ce)) {
 			return true;
 		}
 
@@ -547,10 +548,10 @@ public class OWLAPIv3OWL2Ontology implements OWL2Ontology<OWLObject> {
 					}
 					return false;
 				} else {
-					return EntitySearcher.getObjectPropertyValues(is, (OWLObjectPropertyExpression) pex, o).contains(ob);
+					return EntitySearcher.getObjectPropertyValues(is, (OWLObjectPropertyExpression) pex, o).collect(Collectors.toList()).contains(ob);
 				}
 			} else if (pex.isDataPropertyExpression()) {
-				return EntitySearcher.getDataPropertyValues(is, (OWLDataPropertyExpression) pex, o).contains(ob);
+				return EntitySearcher.getDataPropertyValues(is, (OWLDataPropertyExpression) pex, o).collect(Collectors.toList()).contains(ob);
 			}
 		}
 

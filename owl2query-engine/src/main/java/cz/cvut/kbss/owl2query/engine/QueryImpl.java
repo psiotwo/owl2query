@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.hp.hpl.jena.sparql.syntax.ElementBind;
+import org.apache.jena.sparql.syntax.ElementBind;
 
 import cz.cvut.kbss.owl2query.UnsupportedQueryException;
 import cz.cvut.kbss.owl2query.model.GroundTerm;

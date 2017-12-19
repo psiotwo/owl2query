@@ -2,15 +2,6 @@ package cz.cvut.kbss.owl2query;
 
 import junit.framework.TestCase;
 
-import org.mindswap.pellet.KnowledgeBase;
-import org.mindswap.pellet.PelletOptions;
-import org.mindswap.pellet.utils.ATermUtils;
-
-import aterm.ATermAppl;
-import cz.cvut.kbss.owl2query.engine.OWL2QueryEngine;
-import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.QueryResult;
-import cz.cvut.kbss.owl2query.model.Variable;
 //import cz.cvut.kbss.owl2query.model.pellet.PelletOWL2Ontology;
 
 public class PelletSimple extends TestCase {

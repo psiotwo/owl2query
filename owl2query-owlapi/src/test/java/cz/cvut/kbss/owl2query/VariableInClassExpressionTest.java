@@ -6,26 +6,17 @@ package cz.cvut.kbss.owl2query;
 
 import cz.cvut.kbss.owl2query.engine.OWL2QueryEngine;
 import cz.cvut.kbss.owl2query.model.AllValuesFrom;
-import cz.cvut.kbss.owl2query.model.GroundTerm;
 import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.OWL2QueryFactory;
-import cz.cvut.kbss.owl2query.model.OWLObjectType;
-import cz.cvut.kbss.owl2query.model.ObjectComplementOf;
 import cz.cvut.kbss.owl2query.model.QueryResult;
-import cz.cvut.kbss.owl2query.model.ResultBinding;
 import cz.cvut.kbss.owl2query.model.Term;
-import cz.cvut.kbss.owl2query.model.VarType;
 import cz.cvut.kbss.owl2query.model.Variable;
 import cz.cvut.kbss.owl2query.model.owlapi.OWLAPIv3OWL2Ontology;
-import cz.cvut.kbss.owl2query.parser.arq.SparqlARQParser;
-import java.io.StringWriter;
 import java.net.URI;
-import java.util.Map;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
@@ -70,7 +61,7 @@ public class VariableInClassExpressionTest {
 
     {
         try {
-            factory = (OWLReasonerFactory) Class.forName("com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory").newInstance();
+            factory = (OWLReasonerFactory) Class.forName("openllet.owlapi.OpenlletReasonerFactory").newInstance();
         } catch (ClassNotFoundException e) {
             factory = null;
             e.printStackTrace();

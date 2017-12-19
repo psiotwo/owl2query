@@ -217,7 +217,7 @@ public class OWLAPIv3QueryFactory extends AbstractOWL2QueryFactory<OWLObject> {
 
 	
 	public OWLObject inverseObjectProperty(OWLObject op) {
-		return f.getOWLObjectInverseOf(getOWLObjectPropertyExpression(op));
+		return f.getOWLObjectInverseOf(getOWLObjectPropertyExpression(op).asOWLObjectProperty());
 	}
 
 	
