@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.cvut.kbss</groupId>
@@ -18,12 +18,21 @@
         <module>owl2query-owlapi</module>
         <!--<module>owl2query-protege-plugin</module>-->
     </modules>
-   
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.0.0</version>
+            </extension>
+        </extensions>
+    </build>
+
     <distributionManagement>
         <repository>
             <id>kbss</id>
             <name>KBSS Maven 2 Repository</name>
-            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <url>scp://kbss.felk.cvut.cz/var/www/m2repo-private</url>
         </repository>
         <site>
             <id>owl2query</id>
@@ -36,10 +45,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <scm>
-      <connection>scm:https://kbss.felk.cvut.cz/gitblit/r/owl2query</connection>
+        <connection>scm:https://kbss.felk.cvut.cz/gitblit/r/owl2query</connection>
     </scm>
     <organization>
         <name>Czech Technical University in Prague, Knowledge Based and Software Systems Group</name>
         <url>http://kbss.felk.cvut.cz</url>
-    </organization>    
+    </organization>
 </project>
