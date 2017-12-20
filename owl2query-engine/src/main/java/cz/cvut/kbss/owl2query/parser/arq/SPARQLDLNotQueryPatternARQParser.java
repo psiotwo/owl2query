@@ -1040,13 +1040,12 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 
 				final String lexicalValue = jenaLiteral.getLexicalForm();
 				final String datatypeURI = jenaLiteral.getDatatypeURI();
-				G literalValue = null;
+				G literalValue;
 
-				if (datatypeURI != null) {
+				if (!jenaLiteral.language().isEmpty()) {
+					literalValue = f.literal(lexicalValue, jenaLiteral.language());
+				} else if (datatypeURI != null) {
 					literalValue = f.typedLiteral(lexicalValue, datatypeURI);
-				} else if (jenaLiteral.language() != null) {
-					literalValue = f.literal(lexicalValue,
-							jenaLiteral.language());
 				} else {
 					literalValue = f.literal(lexicalValue);
 				}
