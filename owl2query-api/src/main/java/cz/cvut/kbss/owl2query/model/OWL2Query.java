@@ -100,4 +100,12 @@ public interface OWL2Query<G> {
 	OWL2Query<G> distinct(boolean b);
 
 	<T> OWL2Query<G> external(T expression);
+
+	OWL2Query<G> setOffset(int offset);
+
+	int getOffset();
+
+	OWL2Query<G> setLimit(int limit);
+
+	int getLimit();
 }

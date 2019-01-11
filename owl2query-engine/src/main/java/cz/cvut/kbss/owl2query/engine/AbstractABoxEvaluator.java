@@ -86,7 +86,10 @@ abstract class AbstractABoxEvaluator<G> implements QueryEvaluator<G> {
 						newBinding.put(var, binding.get(var));
 					}
 
-					newResult.add(newBinding);
+					if (!newResult.add(newBinding)) {
+						// The query result limit has been reached, no need to evaluate further
+						break;
+					}
 				}
 			}
 		}

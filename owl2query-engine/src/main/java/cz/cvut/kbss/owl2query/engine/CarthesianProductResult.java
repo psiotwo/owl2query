@@ -42,7 +42,7 @@ class CarthesianProductResult<G> implements QueryResult<G> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void add(ResultBinding<G> binding) {
+	public boolean add(ResultBinding<G> binding) {
 		throw new UnsupportedOperationException(
 				"CarthesianProductResult do not support addition!");
 	}

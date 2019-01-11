@@ -1191,7 +1191,8 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 								};
 							}
 
-							public void add(ResultBinding<G> binding) {
+							public boolean add(ResultBinding<G> binding) {
+								return true;
 							}
 
 							public List<Variable<G>> getResultVars() {

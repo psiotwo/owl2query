@@ -34,6 +34,8 @@ class QueryResultImpl<G> implements QueryResult<G> {
 
 	private InternalQuery<G> query;
 
+	private int offsetCount = 0;
+
 	public QueryResultImpl(final InternalQuery<G> query) {
 		this.query = query;
 		this.resultVars = new ArrayList<Variable<G>>(query
@@ -48,8 +50,15 @@ class QueryResultImpl<G> implements QueryResult<G> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void add(ResultBinding<G> binding) {
-		bindings.add(binding);
+	public boolean add(ResultBinding<G> binding) {
+		if (bindings.size() >= query.getLimit()) {
+			return false;
+		}
+		if (offsetCount >= query.getOffset()) {
+			bindings.add(binding);
+		}
+		offsetCount++;
+		return true;
 	}
 
 	@Override

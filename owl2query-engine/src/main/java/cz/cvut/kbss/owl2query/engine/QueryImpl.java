@@ -57,6 +57,9 @@ class QueryImpl<G> implements InternalQuery<G> {
 	private boolean distinct = false;
 	private boolean empty = false;
 
+	private int offset = 0;
+	private int limit = Integer.MAX_VALUE;
+
 	QueryImpl(final OWL2Ontology<G> kb) {
 		this.ontology = kb;
 	}
@@ -699,6 +702,34 @@ class QueryImpl<G> implements InternalQuery<G> {
 			LOG.config("Unsupported external atom: " + t + ", ignoring.");
 			return this;
 		}
+	}
+
+	@Override
+	public OWL2Query<G> setOffset(int offset) {
+		if (offset < 0) {
+			throw new IllegalArgumentException("Offset cannot be less than 0.");
+		}
+		this.offset = offset;
+		return this;
+	}
+
+	@Override
+	public int getOffset() {
+		return offset;
+	}
+
+	@Override
+	public OWL2Query<G> setLimit(int limit) {
+		if (limit < 0) {
+			throw new IllegalArgumentException("Limit cannot be less than 0.");
+		}
+		this.limit = limit;
+		return this;
+	}
+
+	@Override
+	public int getLimit() {
+		return limit;
 	}
 
 }
