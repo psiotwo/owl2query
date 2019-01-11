@@ -19,7 +19,7 @@
     <artifactId>owl2query-parent</artifactId>
     <packaging>pom</packaging>
     <name>OWL2Query Parent POM</name>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
     <scm>
         <connection>scm:svn:http://krizik.felk.cvut.cz/km/owl2query/owl2query/trunk</connection>
         <url>http://krizik.felk.cvut.cz/km/owl2query</url>
@@ -101,6 +101,13 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+                <!-- Set project version (recursively) -->
+                <!-- Usage mvn versions:set -DnewVersion=$version and then mvn versions:commit to confirm changes -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
         </plugins>
         <extensions>
             <extension>
