@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package org.apache.jena.sparql.serializer;
@@ -24,7 +24,6 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.Syntax;
 import org.apache.jena.sparql.util.NodeToLabelMapBNode;
-import org.apache.jena.system.Serializer;
 
 public class MySerializer{
 
@@ -41,15 +40,15 @@ public class MySerializer{
         //Serialization Context that preserves b node labels
         // For the construct pattern
         SerializationContext cxt2 = new SerializationContext(query, new NodeToLabelMapBNode("c", false)  ) ;
-        
-        serializeARQ(query, writer, 
+
+        serializeARQ(query, writer,
                      new FormatterElement(writer, cxt1),
                      new FmtExprSPARQL(writer, cxt1),
                      new FmtTemplate(writer, cxt2)) ;
-    }	
+    }
 	static final int BLOCK_INDENT = 2 ;
     /** Output the query
-     * 
+     *
      * @param query  The query
      * @param out    OutputStream
      */
@@ -57,14 +56,14 @@ public class MySerializer{
     {
         serialize(query, out, null) ;
     }
-    
+
     /** Output the query
-     * 
+     *
      * @param query  The query
      * @param out     OutputStream
      * @param syntax  Syntax URI
      */
-    
+
     static public void serialize(Query query, OutputStream out, Syntax syntax)
     {
         IndentedWriter writer = new IndentedWriter(out) ;
@@ -72,12 +71,12 @@ public class MySerializer{
         writer.flush() ;
         try { out.flush() ; } catch (Exception ex) { }
     }
-    
+
     /** Format the query into the buffer
      * @param query  The query
      * @param buff    IndentedLineBuffer
      */
-    
+
     static public void serialize(Query query, IndentedLineBuffer buff)
     {
         Syntax s = query.getSyntax() ;
@@ -85,24 +84,24 @@ public class MySerializer{
             s = Syntax.syntaxSPARQL ;
         serialize(query, buff, s) ;
     }
-    
+
     /** Format the query
-     * 
+     *
      * @param query      The query
      * @param buff       IndentedLineBuffer in which to place the unparsed query
      * @param outSyntax  Syntax URI
      */
-    
+
     static public void serialize(Query query, IndentedLineBuffer buff, Syntax outSyntax)
     {
         serialize(query, buff, outSyntax) ;
     }
-    
+
     /** Format the query
      * @param query   The query
      * @param writer  IndentedWriter
      */
-    
+
     static public void serialize(Query query, IndentedWriter writer)
     {
         Syntax s = query.getSyntax() ;
@@ -110,25 +109,25 @@ public class MySerializer{
             s = Syntax.syntaxSPARQL ;
         serialize(query, writer, s) ;
     }
-    
+
     /** Format the query
-     * 
+     *
      * @param writer     IndentedWriter
      * @param outSyntax  Syntax URI
      */
-    
+
     static public void serialize(Query query, IndentedWriter writer, Syntax outSyntax)
     {
         if ( outSyntax == null )
             outSyntax = Syntax.syntaxSPARQL ;
-        
+
         if ( outSyntax.equals(Syntax.syntaxARQ) )
         {
             serializeARQ(query, writer) ;
             writer.flush() ;
             return ;
         }
-        
+
         if (outSyntax.equals(Syntax.syntaxSPARQL_10))
         {
             serializeSPARQL_10(query, writer) ;
@@ -142,20 +141,20 @@ public class MySerializer{
             writer.flush() ;
             return ;
         }
-        
+
 //        if (outSyntax.equals(Syntax.syntaxSPARQL_X))
 //        {
 //            serializeSPARQL_X(query, writer) ;
 //            writer.flush() ;
 //            return ;
 //        }
-        
-        Log.warn(Serializer.class,"Unknown syntax: " + outSyntax) ;
+
+        Log.warn(MySerializer.class,"Unknown syntax: " + outSyntax) ;
     }
-     
+
     //changed to public
-    static public void serializeARQ(Query query, 
-                                     IndentedWriter writer, 
+    static public void serializeARQ(Query query,
+                                     IndentedWriter writer,
                                      FormatterElement eltFmt,
                                      FmtExprSPARQL    exprFmt,
                                      FormatterTemplate templateFmt)
