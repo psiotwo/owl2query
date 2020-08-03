@@ -1,50 +1,44 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 import cz.cvut.kbss.owl2query.model.QueryResult;
 import cz.cvut.kbss.owl2query.model.ResultBinding;
 import cz.cvut.kbss.owl2query.model.Variable;
 
+import java.util.*;
+
 class QueryResultImpl<G> implements QueryResult<G> {
 
-	private Collection<ResultBinding<G>> bindings;
+	private final Collection<ResultBinding<G>> bindings;
 
-	private List<Variable<G>> resultVars;
+	private final List<Variable<G>> resultVars;
 
-	private InternalQuery<G> query;
+	private final InternalQuery<G> query;
 
 	private int offsetCount = 0;
 
 	public QueryResultImpl(final InternalQuery<G> query) {
 		this.query = query;
-		this.resultVars = new ArrayList<Variable<G>>(query
+		this.resultVars = new ArrayList<>(query
 				.getResultVars());
 
 		if (query.isDistinct())
-			bindings = new LinkedHashSet<ResultBinding<G>>();
+			bindings = new LinkedHashSet<>();
 		else
-			bindings = new ArrayList<ResultBinding<G>>();
+			bindings = new ArrayList<>();
 	}
 
 	/**
@@ -76,11 +70,8 @@ class QueryResultImpl<G> implements QueryResult<G> {
 		} else if (!bindings.equals(other.bindings))
 			return false;
 		if (resultVars == null) {
-			if (other.resultVars != null)
-				return false;
-		} else if (!resultVars.equals(other.resultVars))
-			return false;
-		return true;
+			return other.resultVars == null;
+		} else return resultVars.equals(other.resultVars);
 	}
 
 	/**

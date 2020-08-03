@@ -1,31 +1,26 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
 
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import cz.cvut.kbss.owl2query.model.ResultBinding;
 import cz.cvut.kbss.owl2query.model.Term;
 import cz.cvut.kbss.owl2query.model.Variable;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class StaticCostQueryPlan<G> extends QueryPlan<G> {
 	private static final Logger log = Logger
@@ -35,12 +30,12 @@ class StaticCostQueryPlan<G> extends QueryPlan<G> {
 
 	private int index;
 
-	private int size;
+	private final int size;
 
-	private QueryCost<G> cost;
+	private final QueryCost<G> cost;
 
 	private double minCost;
-	
+
 	public StaticCostQueryPlan(InternalQuery<G> query) {
 		super(query);
 
@@ -48,7 +43,7 @@ class StaticCostQueryPlan<G> extends QueryPlan<G> {
 
 		index = 0;
 		size = query.getAtoms().size();
-		cost = new QueryCost<G>(query.getOntology());
+		cost = new QueryCost<>(query.getOntology());
 		sortedAtoms = null;
 
 		if (size == 0) {
@@ -56,9 +51,8 @@ class StaticCostQueryPlan<G> extends QueryPlan<G> {
 		} else if (size == 1) {
 			sortedAtoms = query.getAtoms();
 		} else {
-			minCost = chooseOrdering(new ArrayList<QueryAtom<G>>(query
-					.getAtoms()), new ArrayList<QueryAtom<G>>(size),
-					new HashSet<Variable<G>>(), false, Double.POSITIVE_INFINITY);
+			minCost = chooseOrdering(new ArrayList<>(query.getAtoms()), new ArrayList<>(size),
+					new HashSet<>(), false, Double.POSITIVE_INFINITY);
 
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("WINNER : Cost=" + minCost + " ,atoms=" + sortedAtoms);
@@ -69,23 +63,22 @@ class StaticCostQueryPlan<G> extends QueryPlan<G> {
 	public double getMinCost() {
 		return minCost;
 	}
-	
+
 	private double chooseOrdering(List<QueryAtom<G>> atoms,
 			List<QueryAtom<G>> orderedAtoms, Set<Variable<G>> boundVars,
 			boolean notOptimal, double minCost) {
 		if (atoms.isEmpty()) {
 			if (notOptimal) {
 				if (sortedAtoms == null) {
-					sortedAtoms = new ArrayList<QueryAtom<G>>(orderedAtoms);
+					sortedAtoms = new ArrayList<>(orderedAtoms);
 				}
 			} else {
-				double queryCost = estimate(orderedAtoms,
-						new HashSet<Term<G>>());
+				double queryCost = estimate(orderedAtoms, new HashSet<>());
 				if (log.isLoggable(Level.FINER)) {
 					log.finer("Cost " + queryCost + " for " + orderedAtoms);
 				}
 				if (queryCost < minCost) {
-					sortedAtoms = new ArrayList<QueryAtom<G>>(orderedAtoms);
+					sortedAtoms = new ArrayList<>(orderedAtoms);
 					minCost = queryCost;
 				}
 			}
@@ -97,10 +90,8 @@ class StaticCostQueryPlan<G> extends QueryPlan<G> {
 			final QueryAtom<G> atom = atoms.get(i);
 
 			boolean newNonOptimal = notOptimal;
-			final Set<Variable<G>> newBoundVars = new HashSet<Variable<G>>(
-					boundVars);
-			// TODO reorder UV atoms after all class and property variables are
-			// bound.
+			final Set<Variable<G>> newBoundVars = new HashSet<>(boundVars);
+			// TODO reorder UV atoms after all class and property variables are bound.
 
 			if (!atom.isGround()) {
 				int boundCount = 0;
@@ -162,11 +153,11 @@ class StaticCostQueryPlan<G> extends QueryPlan<G> {
 
 		int n = atoms.size();
 
-		Set<Term<G>> lastBound = new HashSet<Term<G>>(bound);
-		final List<Set<Term<G>>> boundList = new ArrayList<Set<Term<G>>>(n);
+		Set<Term<G>> lastBound = new HashSet<>(bound);
+		final List<Set<Term<G>>> boundList = new ArrayList<>(n);
 		for (final QueryAtom<G> atom : atoms) {
 			boundList.add(lastBound);
-			lastBound = new HashSet<Term<G>>(lastBound);
+			lastBound = new HashSet<>(lastBound);
 			lastBound.addAll(atom.getArguments());
 		}
 

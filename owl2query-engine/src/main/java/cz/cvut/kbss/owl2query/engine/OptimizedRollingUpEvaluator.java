@@ -1,72 +1,59 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import cz.cvut.kbss.owl2query.model.*;
+
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
-import cz.cvut.kbss.owl2query.model.QueryResult;
-import cz.cvut.kbss.owl2query.model.ResultBinding;
-import cz.cvut.kbss.owl2query.model.Term;
-import cz.cvut.kbss.owl2query.model.VarType;
-import cz.cvut.kbss.owl2query.model.Variable;
 
 class OptimizedRollingUpEvaluator<G> extends AbstractABoxEvaluator<G> {
 	private static final Logger log = OWL2QueryEngine.log;
 
 	@Override
 	public QueryResult<G> execABoxQuery(final InternalQuery<G> q) {
-		final QueryResult<G> results = new QueryResultImpl<G>(q);
+		final QueryResult<G> results = new QueryResultImpl<>(q);
 		final OWL2Ontology<G> kb = q.getOntology();
 
 		if (q.getDistVars().isEmpty()) {
 			if (OWL2QueryEngine.execBooleanABoxQuery(q)) {
-				results.add(new ResultBindingImpl<G>());
+				results.add(new ResultBindingImpl<>());
 			}
 		} else {
-			final Map<Variable<G>, Set<? extends G>> varBindings = new HashMap<Variable<G>, Set<? extends G>>();
+			final Map<Variable<G>, Set<? extends G>> varBindings = new HashMap<>();
 
 			for (final Variable<G> currVar : q
 					.getDistVarsOfTypes(VarType.INDIVIDUAL)) {
-				varBindings.put(currVar, kb.getInstances(q.rollUpTo(currVar, Collections.<Term<G>>emptySet()),
+				varBindings.put(currVar, kb.getInstances(q.rollUpTo(currVar, Collections.emptySet()),
 						false));
 			}
 
 			if (log.isLoggable(Level.FINER))
 				log.finer("Var bindings: " + varBindings);
 
-			final List<Variable<G>> varList = new ArrayList<Variable<G>>(
+			final List<Variable<G>> varList = new ArrayList<>(
 					varBindings.keySet());
 
-			final Map<Variable<G>, Collection<ResultBinding<G>>> goodLists = new HashMap<Variable<G>, Collection<ResultBinding<G>>>();
+			final Map<Variable<G>, Collection<ResultBinding<G>>> goodLists = new HashMap<>();
 
 			final Variable<G> first = varList.get(0);
-			final Collection<ResultBinding<G>> c = new HashSet<ResultBinding<G>>();
+			final Collection<ResultBinding<G>> c = new HashSet<>();
 
 			for (final G a : varBindings.get(first)) {
-				final ResultBinding<G> bind = new ResultBindingImpl<G>();
+				final ResultBinding<G> bind = new ResultBindingImpl<>();
 				bind.put(first, kb.getFactory().wrap(a));
 				c.add(bind);
 			}
@@ -77,7 +64,7 @@ class OptimizedRollingUpEvaluator<G> extends AbstractABoxEvaluator<G> {
 			for (int i = 1; i < varList.size(); i++) {
 				final Variable<G> next = varList.get(i);
 
-				final Collection<ResultBinding<G>> newBindings = new HashSet<ResultBinding<G>>();
+				final Collection<ResultBinding<G>> newBindings = new HashSet<>();
 
 				for (final ResultBinding<G> binding : previous) {
 					for (final G testBind : varBindings.get(next)) {
@@ -114,7 +101,7 @@ class OptimizedRollingUpEvaluator<G> extends AbstractABoxEvaluator<G> {
 
 			if (hasLiterals) {
 				for (final ResultBinding<G> b : previous) {
-					for (final Iterator<ResultBinding<G>> i = new LiteralIterator<G>(
+					for (final Iterator<ResultBinding<G>> i = new LiteralIterator<>(
 							q, b, kb.getFactory()); i.hasNext();) {
 						results.add(i.next());
 					}

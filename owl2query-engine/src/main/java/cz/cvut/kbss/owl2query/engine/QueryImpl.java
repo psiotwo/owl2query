@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
@@ -86,7 +86,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 			}
 			return result;
 		}
-		
+
 		// TODO
 
 		return true;
@@ -94,7 +94,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 
 	/**
 	 * Updates term types
-	 * 
+	 *
 	 * @return false if the term type is undefined or of incompatible types.
 	 */
 	private boolean setTermType(final QueryAtom<G> atom) {
@@ -196,14 +196,14 @@ class QueryImpl<G> implements InternalQuery<G> {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Returns a set of variables of ONE of the types.
 	 */
 	public Set<Variable<G>> getDistVarsOfTypes(final VarType... t) {
 		final Set<Variable<G>> vars = new HashSet<Variable<G>>();
 
 		for (final Variable<G> v : distVars) {
-			final Set<VarType> varsx = this.variables.get(v); 
+			final Set<VarType> varsx = this.variables.get(v);
 			if (varsx != null && !Collections.disjoint(varsx, Arrays.asList(t))) {
 				vars.add(v);
 			}
@@ -239,7 +239,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 		if (!distVars.contains(a)) {
 			distVars.add(a);
 		}
-		
+
 		if (result && !resultVars.contains(a)) {
 			resultVars.add(a);
 		}
@@ -363,8 +363,8 @@ class QueryImpl<G> implements InternalQuery<G> {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param var
 	 *            a term to which the query should be rolled
 	 * @param visited
@@ -697,7 +697,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	public <T> OWL2Query<G> external( T t ) {
 		if (t instanceof ElementBind) {
 			ElementBind b = (ElementBind) t;
-			return add(new ARQBindExternal<G>(b.getVar(), b.getExpr()));			
+			return add(new ARQBindExternal<>(b.getVar(), b.getExpr()));
 		} else {
 			LOG.config("Unsupported external atom: " + t + ", ignoring.");
 			return this;

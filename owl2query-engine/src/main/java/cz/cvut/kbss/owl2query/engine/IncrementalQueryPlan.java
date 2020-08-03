@@ -1,26 +1,25 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
 
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
+import cz.cvut.kbss.owl2query.model.ResultBinding;
+
 import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import cz.cvut.kbss.owl2query.model.ResultBinding;
 
 class IncrementalQueryPlan<G> extends QueryPlan<G> {
 
@@ -31,22 +30,22 @@ class IncrementalQueryPlan<G> extends QueryPlan<G> {
 
 	private final List<QueryAtom<G>> atoms;
 
-	private int size;
+	private final int size;
 
-	private QueryCost<G> cost;
+	private final QueryCost<G> cost;
 
 	public IncrementalQueryPlan(final InternalQuery<G> query) {
 		super(query);
 
 		QuerySizeEstimator.computeSizeEstimate(query);
 
-		explored = new Stack<Integer>();
+		explored = new Stack<>();
 
 		atoms = query.getAtoms();
 
 		size = atoms.size();
 
-		cost = new QueryCost<G>(query.getOntology());
+		cost = new QueryCost<>(query.getOntology());
 
 		reset();
 	}
@@ -90,13 +89,13 @@ class IncrementalQueryPlan<G> extends QueryPlan<G> {
 		explored.add(best);
 
 		if (log.isLoggable(Level.FINER)) {
-			String treePrint = "";
+			StringBuilder treePrint = new StringBuilder();
 			for (int j = 0; j < explored.size(); j++) {
-				treePrint += " ";
+				treePrint.append(" ");
 			}
-			treePrint += bestAtom + " : " + bestCost;
+			treePrint.append(bestAtom).append(" : ").append(bestCost);
 
-			log.finer(treePrint);
+			log.finer(treePrint.toString());
 		}
 
 		return bestAtom;

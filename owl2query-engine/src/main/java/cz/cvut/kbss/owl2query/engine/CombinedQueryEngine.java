@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
@@ -423,7 +423,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 						if (pvI.isGround()) {
 							subjectCandidates = Collections.singleton(pvI
 									.asGroundTerm().getWrappedObject());
-							
+
 							objectCandidates = kb.getPropertyValues(pvP
 									.asGroundTerm().getWrappedObject(), pvI
 									.asGroundTerm().getWrappedObject());
@@ -1095,7 +1095,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 					runAllPropertyChecks(arguments.get(0).asVariable(),
 							kb.getIrreflexiveProperties(), binding);
 					break;
-					
+
 				case Core:
 					final Core<G> c = (Core<G>) current;
 					final Variable<G> var = c.getTerm().asVariable();
@@ -1218,19 +1218,15 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 					CarthesianProductResult<G> results = new CarthesianProductResult<G>(
 							vars, candidates);
 
-					List<ResultBinding<G>> list = new ArrayList<ResultBinding<G>>();
+					List<ResultBinding<G>> list = new ArrayList<>();
 
 					InternalQuery<G> qX = notAtom.getQuery();
 
-					for (Iterator<ResultBinding<G>> bIt = OWL2QueryEngine.exec(
-							qX.distinct(true)).iterator(); bIt.hasNext();) {
-						ResultBinding<G> bI = bIt.next();
+					for (ResultBinding<G> bI : OWL2QueryEngine.exec(qX.distinct(true))) {
 						list.add(bI);
 					}
 
-					for (Iterator<ResultBinding<G>> bIt = results.iterator(); bIt
-							.hasNext();) {
-						ResultBinding<G> bI = bIt.next();
+					for (ResultBinding<G> bI : results) {
 						ResultBinding<G> candidateBinding = binding.clone();
 						candidateBinding.putAll(bI);
 						if (list.contains(bI)) {
@@ -1260,10 +1256,10 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 						final ResultBinding<G> candidateBinding = binding.clone();
 						final Iterator<ResultBinding<G>> i = cur.eval(candidateBinding, kb);
 						while (i.hasNext()) {
-							ResultBinding<G> r = i.next(); 
+							ResultBinding<G> r = i.next();
 							exec(r);
-						}						
-					} else {					
+						}
+					} else {
 						throw new UnsupportedQueryException("Unknown atom type '"
 							+ current.getPredicate() + "'.");
 					}
@@ -1304,12 +1300,12 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 		boolean hasLiterals = q.getDistVarsOfTypes(
 				VarType.INDIVIDUAL_OR_LITERAL, VarType.LITERAL).isEmpty();
 
-		for (final Iterator<ResultBinding<G>> i = new BindingIterator<G>(
+		for (final Iterator<ResultBinding<G>> i = new BindingIterator<>(
 				varBindings, f); i.hasNext();) {
 			final ResultBinding<G> candidate = i.next().clone();
 			candidate.putAll(binding);
 			if (hasLiterals) {
-				for (final Iterator<ResultBinding<G>> l = new LiteralIterator<G>(
+				for (final Iterator<ResultBinding<G>> l = new LiteralIterator<>(
 						q, candidate, f); l.hasNext();) {
 					final ResultBinding<G> mappy = binding.clone();
 					mappy.putAll(l.next());

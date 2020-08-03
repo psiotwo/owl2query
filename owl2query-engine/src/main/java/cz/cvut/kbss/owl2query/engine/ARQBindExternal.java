@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
@@ -51,7 +51,7 @@ public class ARQBindExternal<G> extends External<G> {
 		super("arq-expr");
 		this.var = var;
 		this.expr = expr;
-		this.binding = new HashMap<Variable<G>, GroundTerm<G>>();
+		this.binding = new HashMap<>();
 	}
 
 	private Binding toJena(Map<? extends Term<G>,? extends Term<G>> binding, final OWL2Ontology<G> ont) {
@@ -91,8 +91,7 @@ public class ARQBindExternal<G> extends External<G> {
 			Map<? extends Term<G>, ? extends Term<G>> binding,
 			OWL2Ontology<G> ont) {
 
-		return new ARQBindExternal<G>(var, expr.copySubstitute(toJena(binding,
-				ont)));
+		return new ARQBindExternal<>(var, expr.copySubstitute(toJena(binding, ont)));
 	}
 
 	@Override
@@ -101,8 +100,8 @@ public class ARQBindExternal<G> extends External<G> {
 		final FunctionEnv env = new ExecutionContext(ARQ.getContext(), null,
 				null, null);
 		// TODO
-		final List<ResultBinding<G>> newBinding = new ArrayList<ResultBinding<G>>();
-		final ResultBinding<G> b = new ResultBindingImpl<G>(binding);
+		final List<ResultBinding<G>> newBinding = new ArrayList<>();
+		final ResultBinding<G> b = new ResultBindingImpl<>(binding);
 		newBinding.add(b);
 
 		final Binding jenaBinding = toJena(binding, o);

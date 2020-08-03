@@ -1,37 +1,20 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
 
-import cz.cvut.kbss.owl2query.model.AllValuesFrom;
-import cz.cvut.kbss.owl2query.model.ExactCardinality;
-import cz.cvut.kbss.owl2query.model.GroundTerm;
-import cz.cvut.kbss.owl2query.model.HasValue;
-import cz.cvut.kbss.owl2query.model.IntersectionOf;
-import cz.cvut.kbss.owl2query.model.MaxCardinality;
-import cz.cvut.kbss.owl2query.model.MinCardinality;
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
-import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.OWL2QueryFactory;
-import cz.cvut.kbss.owl2query.model.OWLObjectType;
-import cz.cvut.kbss.owl2query.model.ObjectComplementOf;
-import cz.cvut.kbss.owl2query.model.ObjectHasSelf;
-import cz.cvut.kbss.owl2query.model.SomeValuesFrom;
-import cz.cvut.kbss.owl2query.model.Term;
-import cz.cvut.kbss.owl2query.model.UnionOf;
-import cz.cvut.kbss.owl2query.model.VarType;
-import cz.cvut.kbss.owl2query.model.Variable;
+import cz.cvut.kbss.owl2query.model.*;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -40,29 +23,29 @@ import java.util.Set;
 public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G> {
 
 	public OWL2Query<G> createQuery(final OWL2Ontology<G> o) {
-		return new QueryImpl<G>(o);
+		return new QueryImpl<>(o);
 	}
 
 	public Variable<G> variable(String name) {
-		return new VariableImpl<G>(name);
+		return new VariableImpl<>(name);
 	}
 
 	public GroundTerm<G> wrap(final G gt) {
-		return new GroundTermImpl<G>(gt);
+		return new GroundTermImpl<>(gt);
 	}
-	
+
 //    protected abstract OWL2Ontology getOntology();
-    
+
     @Override
     public AllValuesFrom<G> allValuesFrom(Term<G> ope, Term<G> ce) {
         return new AllValuesFromImpl(ope, ce);
     }
-    
+
     @Override
     public ObjectComplementOf<G> objectComplementOf(Term<G> c) {
         return new ObjectComplementOfImpl(c);
     }
-    
+
     @Override
     public ObjectHasSelf<G> objectHasSelf(Term<G> ope) {
         return new ObjectHasSelfImpl(ope);
@@ -82,7 +65,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
     public MinCardinality<G> minCardinality(final int card, final Term<G> ope) {
         return new MinCardinalityImplG(card, ope);
     }
-    
+
     @Override
     public MinCardinality<G> minCardinality(final int card, final Term<G> ope,
             final Term<G> ce) {
@@ -281,7 +264,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
 
         @Override
         public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding, OWL2Ontology<G> ont) {
-            Set<Term<G>> nts = new HashSet<Term<G>>();
+            Set<Term<G>> nts = new HashSet<>();
 
             for (final Term<G> x : this.terms) {
                 nts.add(x.apply(binding, ont));
@@ -301,7 +284,6 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
         protected Term<G> intersectionOfInner(final Set<Term<G>> c, OWL2Ontology<G> ont) {
             boolean ground = true;
 
-            Set<Term<G>> terms = new HashSet<Term<G>>();
             Set<G> ces = new HashSet<G>();
 
             boolean data = false;
@@ -490,7 +472,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
                 return new MaxCardinalityImplG(card, ope);
             }
         }
-    };
+    }
 
     public class ExactCardinalityImplS extends ExactCardinality<G> {
 
@@ -532,7 +514,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
                 return new ExactCardinalityImplS(card, ope, ce);
             }
         }
-    };
+    }
 
     public class ExactCardinalityImplG extends ExactCardinality<G> {
 
@@ -571,7 +553,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
                 return new ExactCardinalityImplG(card, ope);
             }
         }
-    };
+    }
 
     public class SomeValuesFromImpl extends SomeValuesFrom<G> {
 
@@ -613,7 +595,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
                 return new SomeValuesFromImpl(ope, ce);
             }
         }
-    };
+    }
 
     public class UnionOfImpl extends UnionOf<G> {
 
@@ -623,7 +605,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
 
         @Override
         public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding, OWL2Ontology<G> ont) {
-            Set<Term<G>> nts = new HashSet<Term<G>>();
+            Set<Term<G>> nts = new HashSet<>();
 
             for (final Term<G> x : this.terms) {
                 nts.add(x.apply(binding, ont));
@@ -644,8 +626,7 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
 
             boolean ground = true;
 
-            Set<Term<G>> terms = new HashSet<Term<G>>();
-            Set<G> ces = new HashSet<G>();
+            Set<G> ces = new HashSet<>();
 
             boolean data = false;
 
@@ -671,5 +652,5 @@ public abstract class AbstractOWL2QueryFactory<G> implements OWL2QueryFactory<G>
                 return new UnionOfImpl(c);
             }
         }
-    };
+    }
 }

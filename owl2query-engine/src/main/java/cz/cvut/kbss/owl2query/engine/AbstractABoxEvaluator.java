@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
@@ -53,8 +53,8 @@ abstract class AbstractABoxEvaluator<G> implements QueryEvaluator<G> {
 		final QueryResult<G> result;
 
 		if (schemaQuery.getAtoms().isEmpty()) {
-			result = new QueryResultImpl<G>(query);
-			result.add(new ResultBindingImpl<G>());
+			result = new QueryResultImpl<>(query);
+			result.add(new ResultBindingImpl<>());
 		} else {
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("Executing TBox query: " + schemaQuery);
@@ -72,7 +72,7 @@ abstract class AbstractABoxEvaluator<G> implements QueryEvaluator<G> {
 				log.finer("ABox query empty ... returning.");
 			}
 		} else {
-			newResult = new QueryResultImpl<G>(query);
+			newResult = new QueryResultImpl<>(query);
 			for (ResultBinding<G> binding : result) {
 				final InternalQuery<G> query2 = aboxQuery.apply(binding);
 
@@ -96,10 +96,10 @@ abstract class AbstractABoxEvaluator<G> implements QueryEvaluator<G> {
 		return newResult;
 	}
 
-	private final void partitionQuery(final InternalQuery<G> query) {
+	private void partitionQuery(final InternalQuery<G> query) {
 
-		schemaQuery = new QueryImpl<G>(query);
-		aboxQuery = new QueryImpl<G>(query);
+		schemaQuery = new QueryImpl<>(query);
+		aboxQuery = new QueryImpl<>(query);
 
 		for (final QueryAtom<G> atom : query.getAtoms()) {
 			switch (atom.getPredicate()) {
@@ -154,15 +154,15 @@ abstract class AbstractABoxEvaluator<G> implements QueryEvaluator<G> {
 
 /**
  * Iterator that iterates over all possible variable bindings.
- * 
+ *
  * Given an input map ?var1 -> i11, ..., i1N ... ?varM -> iM1, ..., iMN
- * 
- * 
+ *
+ *
  * @param <G>
  */
 class BindingIterator<G> implements Iterator<ResultBinding<G>> {
-	private final List<List<G>> varB = new ArrayList<List<G>>();
-	private final List<Variable<G>> vars = new ArrayList<Variable<G>>();
+	private final List<List<G>> varB = new ArrayList<>();
+	private final List<Variable<G>> vars = new ArrayList<>();
 	private final OWL2QueryFactory<G> factory;
 	private final int[] indices;
 
@@ -179,7 +179,7 @@ class BindingIterator<G> implements Iterator<ResultBinding<G>> {
 				more = false;
 				break;
 			} else {
-				varB.add(new ArrayList<G>(values));
+				varB.add(new ArrayList<>(values));
 			}
 		}
 
@@ -215,7 +215,7 @@ class BindingIterator<G> implements Iterator<ResultBinding<G>> {
 		if (!more)
 			return null;
 
-		final ResultBinding<G> next = new ResultBindingImpl<G>();
+		final ResultBinding<G> next = new ResultBindingImpl<>();
 
 		for (int i = 0; i < indices.length; i++) {
 			next.put(vars.get(i), factory.wrap(varB.get(i).get(indices[i])));
@@ -240,13 +240,13 @@ class BindingIterator<G> implements Iterator<ResultBinding<G>> {
 }
 
 class LiteralIterator<G> implements Iterator<ResultBinding<G>> {
-	private int[] indices;
+	private final int[] indices;
 
-	private ResultBinding<G> binding;
+	private final ResultBinding<G> binding;
 
-	private Set<Variable<G>> litVars;
+	private final Set<Variable<G>> litVars;
 
-	private List<List<GroundTerm<G>>> litVarBindings = new ArrayList<List<GroundTerm<G>>>();
+	private final List<List<GroundTerm<G>>> litVarBindings = new ArrayList<>();
 
 	private boolean more = true;
 
@@ -264,8 +264,7 @@ class LiteralIterator<G> implements Iterator<ResultBinding<G>> {
 			// recognizing Datatypes and adjusting Query model supply the
 			// corresponding literal.
 
-			final List<G> foundLiterals = new ArrayList<G>();
-			boolean first = true;
+			final List<G> foundLiterals = new ArrayList<>();
 
 			for (final QueryAtom<G> atom : q.findAtoms(
 					QueryPredicate.PropertyValue, null, null, litVar)) {
@@ -277,18 +276,13 @@ class LiteralIterator<G> implements Iterator<ResultBinding<G>> {
 					subject = binding.get(subject);
 				}
 
-				litVarBindings.add(index, new ArrayList<GroundTerm<G>>());
+				litVarBindings.add(index, new ArrayList<>());
 
 				final Collection<? extends G> act = kb.getPropertyValues(
 						predicate.asGroundTerm().getWrappedObject(), subject
-								.asGroundTerm().getWrappedObject()); // dtype);
+								.asGroundTerm().getWrappedObject());
 
-				if (first) {
-					foundLiterals.addAll(act);
-				} else {
-					foundLiterals.retainAll(act);
-					first = false;
-				}
+				foundLiterals.addAll(act);
 			}
 
 			if (foundLiterals.size() > 0) {

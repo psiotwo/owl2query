@@ -14,38 +14,21 @@
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import cz.cvut.kbss.owl2query.UnsupportedQueryException;
-import cz.cvut.kbss.owl2query.model.Configuration;
-import cz.cvut.kbss.owl2query.model.GroundTerm;
-import cz.cvut.kbss.owl2query.model.Hierarchy;
-import cz.cvut.kbss.owl2query.model.InternalReasonerException;
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
-import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.OWLObjectType;
-import cz.cvut.kbss.owl2query.model.QueryResult;
-import cz.cvut.kbss.owl2query.model.Term;
-import cz.cvut.kbss.owl2query.model.Variable;
+import cz.cvut.kbss.owl2query.model.*;
 import cz.cvut.kbss.owl2query.parser.QueryParseException;
 import cz.cvut.kbss.owl2query.parser.arq.SparqlARQParser;
 import cz.cvut.kbss.owl2query.util.DisjointSet;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OWL2QueryEngine {
     public static Logger log = Logger
             .getLogger(OWL2QueryEngine.class.getName());
 
     private static <G> QueryEvaluator<G> getQueryExec() {
-        return new CombinedQueryEngine<G>();
+        return new CombinedQueryEngine<>();
         // return new OptimizedRollingUpEvaluator<G>();
         // return new SimpleRollingUpExec<G>();
     }
@@ -56,7 +39,7 @@ public class OWL2QueryEngine {
             return exec(new SparqlARQParser<G>().parse(sparql, kb));
         } catch (final QueryParseException e) {
             log.log(Level.SEVERE, e.getMessage(), e);
-            return new QueryResultImpl<G>(new QueryImpl<G>(kb));
+            return new QueryResultImpl<>(new QueryImpl<>(kb));
         }
     }
 
@@ -66,8 +49,8 @@ public class OWL2QueryEngine {
         query.getOntology().ensureConsistency();
 
         if (query.getAtoms().isEmpty()) {
-            final QueryResultImpl<G> results = new QueryResultImpl<G>(query);
-            results.add(new ResultBindingImpl<G>());
+            final QueryResultImpl<G> results = new QueryResultImpl<>(query);
+            results.add(new ResultBindingImpl<>());
             return results;
         }
 
@@ -105,22 +88,20 @@ public class OWL2QueryEngine {
                 results.add(execSingleQuery(q));
             }
 
-            return new CarthesianProductResult<G>(query.getResultVars(),
+            return new CarthesianProductResult<>(query.getResultVars(),
                     results);
         }
     }
 
     private static <G> QueryResult<G> execSingleQuery(InternalQuery<G> query) {
         if (!query.canHaveResults()) {
-            return new QueryResultImpl<G>(query);
+            return new QueryResultImpl<>(query);
         }
 
         final QueryEvaluator<G> e = getQueryExec();
 
         // long satCount = onto.getSatisfiabilityCount();
         // long consCount = onto.getConsistencyCount();
-
-        final QueryResult<G> qr = e.evaluate(query);
 
         // if (log.isLoggable(Level.FINE)) {
         // log.fine("Results: " + qr);
@@ -130,7 +111,7 @@ public class OWL2QueryEngine {
         // + (onto.getConsistencyCount() - consCount));
         // }
 
-        return qr;
+        return e.evaluate(query);
     }
 
     /**
@@ -185,13 +166,13 @@ public class OWL2QueryEngine {
                 InternalQuery<G> newQuery;
                 if (representative == null) {
                     if (groundQuery == null) {
-                        groundQuery = new QueryImpl<G>(query);
+                        groundQuery = new QueryImpl<>(query);
                     }
                     newQuery = groundQuery;
                 } else {
                     newQuery = queries.get(representative);
                     if (newQuery == null) {
-                        newQuery = new QueryImpl<G>(query);
+                        newQuery = new QueryImpl<>(query);
                         queries.put(representative, newQuery);
                     }
                     for (final Term<G> arg : atom.getArguments()) {
@@ -228,11 +209,11 @@ public class OWL2QueryEngine {
      * @param query
      */
     private static <G> void simplify(InternalQuery<G> query) {
-        final Map<Variable<G>, Set<G>> allInferredTypes = new HashMap<Variable<G>, Set<G>>();
+        final Map<Variable<G>, Set<G>> allInferredTypes = new HashMap<>();
 
         final OWL2Ontology<G> kb = query.getOntology();
         for (final Variable<G> var : query.getVars()) {
-            final Set<G> inferredTypes = new HashSet<G>();
+            final Set<G> inferredTypes = new HashSet<>();
 
             // domain simplification
             for (final QueryAtom<G> pattern : query.findAtoms(
