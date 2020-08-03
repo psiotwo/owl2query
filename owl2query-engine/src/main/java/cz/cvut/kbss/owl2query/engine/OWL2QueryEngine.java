@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
+ * Copyright (C) 2011 Czech Technical University in Prague
  *
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.engine;
@@ -100,8 +100,7 @@ public class OWL2QueryEngine {
 //			System.out.println(queries.get(0));
             return execSingleQuery(queries.get(0));
         } else {
-            final List<QueryResult<G>> results = new ArrayList<QueryResult<G>>(
-                    queries.size());
+            final List<QueryResult<G>> results = new ArrayList<>(queries.size());
             for (final InternalQuery<G> q : queries) {
                 results.add(execSingleQuery(q));
             }
@@ -148,10 +147,9 @@ public class OWL2QueryEngine {
      */
     public static <G> List<InternalQuery<G>> split(InternalQuery<G> query) {
         try {
-            final Set<Variable<G>> resultVars = new HashSet<Variable<G>>(
-                    query.getResultVars());
+            final Set<Variable<G>> resultVars = new HashSet<>(query.getResultVars());
 
-            final DisjointSet<Variable<G>> disjointSet = new DisjointSet<Variable<G>>();
+            final DisjointSet<Variable<G>> disjointSet = new DisjointSet<>();
 
             // partition query according to variables
             for (final QueryAtom<G> atom : query.getAtoms()) {
@@ -168,13 +166,12 @@ public class OWL2QueryEngine {
                 }
             }
 
-            final Collection<Set<Variable<G>>> equivalenceSets = disjointSet
-                    .getEquivalenceSets();
+            final Collection<Set<Variable<G>>> equivalenceSets = disjointSet.getEquivalenceSets();
 
             if (equivalenceSets.size() == 1)
                 return Collections.singletonList(query);
 
-            final Map<Term<G>, InternalQuery<G>> queries = new HashMap<Term<G>, InternalQuery<G>>();
+            final Map<Term<G>, InternalQuery<G>> queries = new HashMap<>();
             InternalQuery<G> groundQuery = null;
             for (final QueryAtom<G> atom : query.getAtoms()) {
                 Term<G> representative = null;
@@ -185,7 +182,7 @@ public class OWL2QueryEngine {
                     }
                 }
 
-                InternalQuery<G> newQuery = null;
+                InternalQuery<G> newQuery;
                 if (representative == null) {
                     if (groundQuery == null) {
                         groundQuery = new QueryImpl<G>(query);
@@ -211,8 +208,7 @@ public class OWL2QueryEngine {
                 newQuery.add(atom);
             }
 
-            final List<InternalQuery<G>> list = new ArrayList<InternalQuery<G>>(
-                    queries.values());
+            final List<InternalQuery<G>> list = new ArrayList<>(queries.values());
 
             if (groundQuery != null) {
                 list.add(0, groundQuery);
@@ -260,14 +256,12 @@ public class OWL2QueryEngine {
                 allInferredTypes.put(var, inferredTypes);
         }
 
-        for (final QueryAtom<G> atom : new ArrayList<QueryAtom<G>>(
-                query.getAtoms())) {
+        for (final QueryAtom<G> atom : new ArrayList<>(query.getAtoms())) {
             if (atom.getPredicate() == QueryPredicate.Type) {
                 final Term<G> clazz = atom.getArguments().get(0);
                 if (!clazz.isVariable()) {
                     final G clazzGT = clazz.asGroundTerm().getWrappedObject();
-                    final Set<G> inferred = allInferredTypes.get(atom
-                            .getArguments().get(1));
+                    final Set<G> inferred = allInferredTypes.get(atom.getArguments().get(1));
 
                     if ((inferred != null) && !inferred.isEmpty()) {
                         if (inferred.contains(clazz)) {
@@ -297,8 +291,7 @@ public class OWL2QueryEngine {
         // get rid of SameAs atoms that contain at least one undistinguished
         // variable.
 //		System.out.println("Preprocessing ...");
-        for (final QueryAtom<G> atom : q.findAtoms(QueryPredicate.SameAs, null,
-                null)) {
+        for (final QueryAtom<G> atom : q.findAtoms(QueryPredicate.SameAs, null, null)) {
 //			System.out.println("> atom=" + atom);
 
             final Term<G> a1 = atom.getArguments().get(0);
@@ -346,7 +339,7 @@ public class OWL2QueryEngine {
         // TODO bug : queries Type(_:x,?x) and PropertyValue(_:x, ?x, . ) and
         // PropertyValue(., ?x, _:x) have to be enriched with one more atom
         // evaluating class/property DVs.
-        for (final QueryAtom<G> a : new HashSet<QueryAtom<G>>(q.getAtoms())) {
+        for (final QueryAtom<G> a : new HashSet<>(q.getAtoms())) {
             switch (a.getPredicate()) {
                 case Type:
                 case DirectType:
@@ -447,8 +440,7 @@ public class OWL2QueryEngine {
             if (!query.getConstants().isEmpty()) {
                 final GroundTerm<G> testInd = query.getConstants().iterator()
                         .next();
-                final G testClass = query.rollUpTo(testInd,
-                        Collections.<Term<G>>emptySet());
+                final G testClass = query.rollUpTo(testInd, Collections.emptySet());
 
                 if (log.isLoggable(Level.FINER))
                     log.finer("Boolean query: " + testInd + " -> " + testClass);
@@ -458,8 +450,7 @@ public class OWL2QueryEngine {
             } else {
                 final Variable<G> testVar = query.getUndistVars().iterator()
                         .next();
-                final G testClass = query.rollUpTo(testVar,
-                        Collections.<Term<G>>emptySet());
+                final G testClass = query.rollUpTo(testVar, Collections.emptySet());
 
                 querySatisfied = kb.isClassAlwaysNonEmpty(testClass);
             }
@@ -553,13 +544,12 @@ public class OWL2QueryEngine {
                         .equals(arguments.get(1).asGroundTerm().getWrappedObject())) {
                     return true;
                 }
-                boolean x = kb
+                return kb
                         .getPropertyHierarchy()
                         .isSub(
                                 arguments.get(0).asGroundTerm().getWrappedObject(),
                                 arguments.get(1).asGroundTerm().getWrappedObject(),
                                 false);
-                return x;
             case DirectSubPropertyOf:
                 return kb
                         .getPropertyHierarchy()

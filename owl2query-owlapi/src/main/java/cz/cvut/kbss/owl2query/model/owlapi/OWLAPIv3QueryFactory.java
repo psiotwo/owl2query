@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2011 Czech Technical University in Prague                                                                                                                                                        
- *                                                                                                                                                                                                                
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free Software 
- * Foundation, either version 3 of the License, or (at your option) any 
- * later version. 
- *                                                                                                                                                                                                                
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
- * details. You should have received a copy of the GNU General Public License 
+ * Copyright (C) 2011 Czech Technical University in Prague
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.model.owlapi;
@@ -59,9 +59,8 @@ public class OWLAPIv3QueryFactory extends AbstractOWL2QueryFactory<OWLObject> {
 		}
 	}
 
-	private Set<OWLClassExpression> getOWLClassExpressions(
-			final Set<OWLObject> ce) {
-		final Set<OWLClassExpression> ces = new HashSet<OWLClassExpression>();
+	private Set<OWLClassExpression> getOWLClassExpressions(final Set<OWLObject> ce) {
+		final Set<OWLClassExpression> ces = new HashSet<>();
 
 		for (final OWLObject o : ce) {
 			ces.add(getOWLClassExpression(o));
@@ -71,7 +70,7 @@ public class OWLAPIv3QueryFactory extends AbstractOWL2QueryFactory<OWLObject> {
 	}
 
 	private Set<OWLDataRange> getOWLDataRanges(final Set<OWLObject> ce) {
-		final Set<OWLDataRange> ces = new HashSet<OWLDataRange>();
+		final Set<OWLDataRange> ces = new HashSet<>();
 
 		for (final OWLObject o : ce) {
 			ces.add(getOWLDataRange(o));
@@ -112,9 +111,8 @@ public class OWLAPIv3QueryFactory extends AbstractOWL2QueryFactory<OWLObject> {
 		}
 	}
 
-	private Set<OWLNamedIndividual> getOWLNamedIndividuals(
-			final Set<OWLObject> nisO) {
-		final Set<OWLNamedIndividual> nis = new HashSet<OWLNamedIndividual>();
+	private Set<OWLNamedIndividual> getOWLNamedIndividuals(final Set<OWLObject> nisO) {
+		final Set<OWLNamedIndividual> nis = new HashSet<>();
 
 		for (final OWLObject o : nisO) {
 			nis.add(getOWLNamedIndividual(o));
@@ -132,7 +130,7 @@ public class OWLAPIv3QueryFactory extends AbstractOWL2QueryFactory<OWLObject> {
 	}
 
 	private Set<OWLLiteral> getOWLLiterals(final Set<OWLObject> nisO) {
-		final Set<OWLLiteral> nis = new HashSet<OWLLiteral>();
+		final Set<OWLLiteral> nis = new HashSet<>();
 
 		for (final OWLObject o : nisO) {
 			nis.add(getOWLLiteral(o));
@@ -151,196 +149,196 @@ public class OWLAPIv3QueryFactory extends AbstractOWL2QueryFactory<OWLObject> {
 		}
 	}
 
-	
+
 	public OWLClass getNothing() {
 		return f.getOWLNothing();
 	}
 
-	
+
 	public OWLClass getThing() {
 		return f.getOWLThing();
 	}
 
-	
+
 	public OWLDatatype getTopDatatype() {
 		return f.getTopDatatype();
 	}
 
-	
+
 	public OWLDataProperty getBottomDataProperty() {
 		return f.getOWLBottomDataProperty();
 	}
 
-	
+
 	public OWLObjectProperty getBottomObjectProperty() {
 		return f.getOWLBottomObjectProperty();
 	}
 
-	
+
 	public OWLDataProperty getTopDataProperty() {
 		return f.getOWLTopDataProperty();
 	}
 
-	
+
 	public OWLObjectProperty getTopObjectProperty() {
 		return f.getOWLTopObjectProperty();
 	}
 
-	
+
 	public OWLObject dataExactCardinality(int card, OWLObject dpe, OWLObject dr) {
 		return f.getOWLDataExactCardinality(card,
 				getOWLDataPropertyExpression(dpe), getOWLDataRange(dr));
 	}
 
-	
+
 	public OWLObject dataMaxCardinality(int card, OWLObject dpe, OWLObject dr) {
 		return f.getOWLDataMaxCardinality(card,
 				getOWLDataPropertyExpression(dpe), getOWLDataRange(dr));
 	}
 
-	
+
 	public OWLObject dataMinCardinality(int card, OWLObject dpe, OWLObject dr) {
 		return f.getOWLDataMinCardinality(card,
 				getOWLDataPropertyExpression(dpe), getOWLDataRange(dr));
 	}
 
-	
+
 	public OWLObject dataOneOf(Set<OWLObject> nis) {
 		return f.getOWLDataOneOf(getOWLLiterals(nis));
 	}
 
-	
+
 	public OWLObject dataSomeValuesFrom(OWLObject dpe, OWLObject ce) {
 		return f.getOWLDataSomeValuesFrom(getOWLDataPropertyExpression(dpe),
 				getOWLDataRange(ce));
 	}
 
-	
+
 	public OWLObject inverseObjectProperty(OWLObject op) {
 		return f.getOWLObjectInverseOf(getOWLObjectPropertyExpression(op).asOWLObjectProperty());
 	}
 
-	
+
 	public OWLObject literal(String s) {
 		return f.getOWLLiteral(s,OWL2Datatype.RDF_PLAIN_LITERAL);
 	}
 
-	
+
 	public OWLObject literal(String s, String lang) {
 		return f.getOWLLiteral(s, lang);
 	}
 
-	
+
 	public OWLObject namedClass(String iri) {
 		return f.getOWLClass(IRI.create(iri));
 	}
 
-	
+
 	public OWLObject namedDataProperty(String iri) {
 		return f.getOWLDataProperty(IRI.create(iri));
 	}
 
-	
+
 	public OWLObject namedDataRange(String iri) {
 		return f.getOWLDatatype(IRI.create(iri));
 	}
 
-	
+
 	public OWLObject namedIndividual(String iri) {
 		return f.getOWLNamedIndividual(IRI.create(iri));
 	}
 
-	
+
 	public OWLObject namedObjectProperty(String iri) {
 		return f.getOWLObjectProperty(IRI.create(iri));
 	}
 
-	
+
 	public OWLObject objectAllValuesFrom(OWLObject ope, OWLObject ce) {
 		return f.getOWLObjectAllValuesFrom(getOWLObjectPropertyExpression(ope),
 				getOWLClassExpression(ce));
 	}
 
-	
+
 	public OWLObject objectComplementOf(OWLObject c) {
 		return f.getOWLObjectComplementOf(getOWLClassExpression(c));
 	}
 
-	
+
 	public OWLObject objectExactCardinality(int card, OWLObject ope,
 			OWLObject ce) {
 		return f.getOWLObjectExactCardinality(card,
 				getOWLObjectPropertyExpression(ope), getOWLClassExpression(ce));
 	}
 
-	
+
 	public OWLObject objectHasSelf(OWLObject ope) {
 		return f.getOWLObjectHasSelf(getOWLObjectPropertyExpression(ope));
 	}
 
-	
+
 	public OWLObject objectHasValue(OWLObject ope, OWLObject ni) {
 		return f.getOWLObjectHasValue(getOWLObjectPropertyExpression(ope),
 				getOWLNamedIndividual(ni));
 	}
 
-	
+
 	public OWLObject objectIntersectionOf(Set<OWLObject> c) {
 		return f.getOWLObjectIntersectionOf(getOWLClassExpressions(c));
 	}
 
-	
+
 	public OWLObject objectMaxCardinality(int card, OWLObject ope, OWLObject ce) {
 		return f.getOWLObjectMaxCardinality(card,
 				getOWLObjectPropertyExpression(ope), getOWLClassExpression(ce));
 	}
 
-	
+
 	public OWLObject objectMinCardinality(int card, OWLObject ope, OWLObject ce) {
 		return f.getOWLObjectMinCardinality(card,
 				getOWLObjectPropertyExpression(ope), getOWLClassExpression(ce));
 	}
 
-	
+
 	public OWLObject objectOneOf(Set<OWLObject> nis) {
 		return f.getOWLObjectOneOf(getOWLNamedIndividuals(nis));
 	}
 
-	
+
 	public OWLObject objectSomeValuesFrom(OWLObject ope, OWLObject ce) {
 		return f.getOWLObjectSomeValuesFrom(
 				getOWLObjectPropertyExpression(ope), getOWLClassExpression(ce));
 	}
 
-	
+
 	public OWLObject objectUnionOf(Set<OWLObject> set) {
 		return f.getOWLObjectUnionOf(getOWLClassExpressions(set));
 	}
 
-	
+
 	public OWLObject typedLiteral(String s, String datatype) {
 		return f.getOWLLiteral(s, f.getOWLDatatype(IRI.create(datatype)));
 
 	}
 
-	
+
 	public OWLObject dataAllValuesFrom(OWLObject ope, OWLObject ce) {
 		return f.getOWLDataAllValuesFrom(getOWLDataPropertyExpression(ope),
 				getOWLDataRange(ce));
 	}
 
-	
+
 	public OWLObject dataHasValue(OWLObject ope, OWLObject ni) {
 		return f.getOWLDataHasValue(getOWLDataPropertyExpression(ope),
 				getOWLLiteral(ni));
 	}
 
-	
+
 	public OWLObject dataIntersectionOf(Set<OWLObject> c) {
 		return f.getOWLDataIntersectionOf(getOWLDataRanges(c));
 	}
 
-	
+
 	public OWLObject dataUnionOf(Set<OWLObject> c) {
 		return f.getOWLDataUnionOf(getOWLDataRanges(c));
 	}

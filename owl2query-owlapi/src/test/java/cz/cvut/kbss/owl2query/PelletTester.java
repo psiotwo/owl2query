@@ -46,21 +46,19 @@ public class PelletTester implements GenericOWLAPITester {
 					String... ontologyURIs) {
 				OWLAPILoader l = new OWLAPILoader();
 				kb = l.getKB();
-				
+
 				if (m == null) {
 					m = l.getManager();
-					m.addIRIMapper(new OWLOntologyIRIMapper() {
-						public IRI getDocumentIRI(IRI arg0) {
-							final URI mm = mapping.get(arg0.toURI());
+					m.addIRIMapper((OWLOntologyIRIMapper) arg0 -> {
+						final URI mm = mapping.get(arg0.toURI());
 
-							if (mm != null) {
-								return IRI.create(mm);
-							} else {
-								return arg0;
-							}
+						if (mm != null) {
+							return IRI.create(mm);
+						} else {
+							return arg0;
 						}
 					});
-										
+
 					try {
 						for (final String uri : ontologyURIs) {
 							if (uri.startsWith("file:")) {
@@ -102,14 +100,12 @@ public class PelletTester implements GenericOWLAPITester {
 					String s = "";
 					BufferedReader reader = new BufferedReader(new FileReader(
 							new File(URI.create(queryURI))));
-					String line = "";
+					String line;
 					while ((line = reader.readLine()) != null) {
 						s += (line + Character.LINE_SEPARATOR);
 					}
 
 					q = new ARQParser().parse(s, kb);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -173,8 +169,7 @@ public class PelletTester implements GenericOWLAPITester {
 		}
 
 		w.write(Character.LINE_SEPARATOR);
-		for (Iterator<ResultBinding> rb = res.iterator(); rb.hasNext();) {
-			ResultBinding r = rb.next();
+		for (ResultBinding r : res) {
 			for (final ATermAppl var : res.getResultVars()) {
 				w.printf("%-" + colWidth + "s", r.getValue(var).toString());
 			}
