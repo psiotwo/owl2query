@@ -32,7 +32,7 @@
         <repository>
             <id>kbss</id>
             <name>KBSS Maven 2 Repository</name>
-            <url>scp://kbss.felk.cvut.cz/var/www/m2repo</url>
+            <url>sftp://kbss.felk.cvut.cz/var/www/m2repo</url>
         </repository>
         <site>
             <id>owl2query</id>
