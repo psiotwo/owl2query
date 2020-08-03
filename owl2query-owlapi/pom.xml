@@ -12,6 +12,7 @@
 
     <properties>
         <net.sourceforge.owlapi.version>5.1.16</net.sourceforge.owlapi.version>
+        <!-- Last version of Openllet supporting Java 8 -->
         <openllet.version>2.6.4</openllet.version>
     </properties>
 
@@ -34,7 +35,7 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>2.0.2</version>
+            <version>1.4.01</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.galigator.openllet/openllet-core -->
@@ -94,9 +95,8 @@
         <!--</dependency>-->
         <dependency>
             <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-jdk1.5</artifactId>
-            <version>0.7.3</version>
-            <scope>compile</scope>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.1.0</version> <!-- Sticking with 1.1.0 for compatibility with Openllet 2.6.4 -->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.23.4</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

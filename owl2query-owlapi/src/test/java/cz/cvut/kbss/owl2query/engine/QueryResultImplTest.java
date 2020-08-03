@@ -24,7 +24,7 @@ public class QueryResultImplTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(queryMock.getResultVars()).thenReturn(Collections.emptyList());
         when(queryMock.isDistinct()).thenReturn(false);
         this.sut = new QueryResultImpl<>(queryMock);
