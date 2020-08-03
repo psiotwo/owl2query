@@ -4,7 +4,7 @@
     <parent>
         <artifactId>owl2query-parent</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.5.1</version>
+        <version>0.6.0</version>
         <relativePath>../owl2query-parent/pom.xml</relativePath>
     </parent>
     <artifactId>owl2query-owlapi</artifactId>
