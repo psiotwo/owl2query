@@ -1,5 +1,5 @@
 # owl2query
-A SPARQL-DL^NOT engine
+A SPARQL-DL<sup>NOT</sup> engine
 
 The engine executes SPARQL-DL^NOT queries as presented in [1].
 
