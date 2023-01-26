@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>owl2query-parent</artifactId>
+        <artifactId>owl2query</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.6.0</version>
-        <relativePath>../owl2query-parent/pom.xml</relativePath>
+        <version>0.6.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>owl2query-engine</artifactId>
     <name>OWL2Query Engine</name>

@@ -80,10 +80,7 @@ public class NotTests extends TestCase {
 
 			LOG.info(qr.toString());
 			assertEquals(8, qr.size());
-		} catch (OWLOntologyCreationException e) {
-			e.printStackTrace();
-			fail();
-		} catch (OWLOntologyChangeException e) {
+		} catch (OWLOntologyCreationException | OWLOntologyChangeException e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -142,10 +139,7 @@ public class NotTests extends TestCase {
 
 			LOG.info("RESULT: " + qr);
 			assertEquals(2, qr.size());
-		} catch (OWLOntologyCreationException e) {
-			e.printStackTrace();
-			fail();
-		} catch (OWLOntologyChangeException e) {
+		} catch (OWLOntologyCreationException | OWLOntologyChangeException e) {
 			e.printStackTrace();
 			fail();
 		}

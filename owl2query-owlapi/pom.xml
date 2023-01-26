@@ -2,16 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>owl2query-parent</artifactId>
+        <artifactId>owl2query</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.6.0</version>
-        <relativePath>../owl2query-parent/pom.xml</relativePath>
+        <version>0.6.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>owl2query-owlapi</artifactId>
     <name>OWL2Query OWLAPI Adapter</name>
 
     <properties>
-        <net.sourceforge.owlapi.version>5.1.16</net.sourceforge.owlapi.version>
+        <net.sourceforge.owlapi.version>5.1.20</net.sourceforge.owlapi.version>
         <!-- Last version of Openllet supporting Java 8 -->
         <openllet.version>2.6.4</openllet.version>
     </properties>
@@ -28,8 +28,15 @@
             <version>${net.sourceforge.owlapi.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-arq</artifactId>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.1.0</version> <!-- Sticking with 1.1.0 for compatibility with Openllet 2.6.4 -->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -44,6 +51,12 @@
             <artifactId>openllet-core</artifactId>
             <version>${openllet.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.galigator.openllet</groupId>
@@ -94,19 +107,25 @@
         <!--<scope>test</scope>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-core</artifactId>
-            <version>1.1.0</version> <!-- Sticking with 1.1.0 for compatibility with Openllet 2.6.4 -->
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>3.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.3.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
