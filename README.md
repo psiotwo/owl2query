@@ -7,6 +7,18 @@ The engine executes SPARQL-DL^NOT queries as presented in [1].
 
 ## Usage
 
+OWL2Query is not hosted in Maven Central. Use the following repository instead:
+
+```xml
+<repository>
+    <id>kbss</id>
+    <name>KBSS Maven 2 Repository</name>
+    <url>https://kbss.felk.cvut.cz/m2repo</url>
+</repository>
+```
+
+Then,
+
 ```xml
 <dependency>
     <groupId>cz.cvut.kbss</groupId>
