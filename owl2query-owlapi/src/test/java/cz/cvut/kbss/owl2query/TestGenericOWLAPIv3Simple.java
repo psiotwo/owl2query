@@ -3,8 +3,8 @@ package cz.cvut.kbss.owl2query;
 import java.net.URI;
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
@@ -24,15 +24,18 @@ import cz.cvut.kbss.owl2query.model.QueryResult;
 import cz.cvut.kbss.owl2query.model.Variable;
 import cz.cvut.kbss.owl2query.model.owlapi.OWLAPIv3OWL2Ontology;
 
-public class GenericOWLAPIv3Simple extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class TestGenericOWLAPIv3Simple {
 
 	private static final Logger LOG = Logger
-			.getLogger(TestCase.class.getName());
+			.getLogger(TestGenericOWLAPIv3Simple.class.getName());
 
 	final String BASE_URI = "http://krizik.felk.cvut.cz/";
 
 	private final TestConfiguration f = TestConfiguration.FACTORY;
 
+	@Test
 	public void test2() {
 		final OWLOntologyManager m = OWLManager.createOWLOntologyManager();
 		OWLOntology o;
@@ -55,23 +58,20 @@ public class GenericOWLAPIv3Simple extends TestCase {
 			final OWL2Query<OWLObject> q = ont.getFactory().createQuery(ont);
 			final Variable<OWLObject> vX = ont.getFactory().variable("x");
 			q.Type(ont.getFactory().wrap(c1), vX);
-			q.addDistVar(vX);
-			q.addResultVar(vX);
+			q.addDistVar(vX, true);
 
 			// evaluation
 			final QueryResult<OWLObject> qr = OWL2QueryEngine.exec(q);
 
 			LOG.info(qr.toString());
 			assertEquals(1, qr.size());
-		} catch (OWLOntologyCreationException e) {
+		} catch (OWLOntologyCreationException | OWLOntologyChangeException e) {
 			e.printStackTrace();
-			fail();
-		} catch (OWLOntologyChangeException e) {
-			e.printStackTrace();
-			fail();
+			Assertions.fail();
 		}
 	}
 
+	@Test
 	public void test2Sparql() {
 		final OWLOntologyManager m = OWLManager.createOWLOntologyManager();
 		try {
@@ -98,7 +98,7 @@ public class GenericOWLAPIv3Simple extends TestCase {
 			assertEquals(1, qr.size());
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail();
+			Assertions.fail();
 		}
 	}
 }

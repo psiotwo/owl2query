@@ -9,15 +9,15 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 public class TestConfiguration {
 
-	public static Map<String, TestConfiguration> map = new HashMap<String, TestConfiguration>();
+	public static Map<String, TestConfiguration> map = new HashMap<>();
 
 	public static final String PELLET = "pellet";
 	public static final String HERMIT = "hermit";
 	public static final String FACT = "fact";
 	public static final String JFACT = "jfact";
 
-	private OWLReasonerFactory f;
-	private OWLReasonerConfiguration c;
+	private final OWLReasonerFactory f;
+	private final OWLReasonerConfiguration c;
 
 	public OWLReasonerConfiguration getConfiguration() {
 		return c;
@@ -49,17 +49,17 @@ public class TestConfiguration {
 	}
 
 	static {
-		add(PELLET, "com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory",
+		add(PELLET, "openllet.owlapi.PelletReasonerFactory",
 				"org.semanticweb.owlapi.reasoner.SimpleConfiguration");
-		add(HERMIT, "org.semanticweb.HermiT.Reasoner$ReasonerFactory",
-				"org.semanticweb.HermiT.Configuration");
+//		add(HERMIT, "org.semanticweb.HermiT.Reasoner$ReasonerFactory",
+//				"org.semanticweb.HermiT.Configuration");
 
 		//((Configuration) map.get(HERMIT).getConfiguration()).prepareReasonerInferences = new Configuration.PrepareReasonerInferences();
 
 //		add(FACT,
 //				"uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory",
 //				null);
-		add(JFACT, "uk.ac.manchester.cs.jfact.JFactFactory", "uk.ac.manchester.cs.jfact.kernel.options.JFactReasonerConfiguration");
+//		add(JFACT, "uk.ac.manchester.cs.jfact.JFactFactory", "uk.ac.manchester.cs.jfact.kernel.options.JFactReasonerConfiguration");
 	}
 
 	public static TestConfiguration FACTORY = map.get(PELLET);

@@ -99,8 +99,8 @@
             <version>1.1.0</version> <!-- Sticking with 1.1.0 for compatibility with Openllet 2.6.4 -->
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

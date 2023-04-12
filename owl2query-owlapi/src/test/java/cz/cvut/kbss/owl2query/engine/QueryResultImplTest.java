@@ -1,8 +1,11 @@
 package cz.cvut.kbss.owl2query.engine;
 
 import cz.cvut.kbss.owl2query.model.ResultBinding;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -12,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class QueryResultImplTest {
@@ -22,7 +24,7 @@ public class QueryResultImplTest {
 
     private QueryResultImpl<Object> sut;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         when(queryMock.getResultVars()).thenReturn(Collections.emptyList());

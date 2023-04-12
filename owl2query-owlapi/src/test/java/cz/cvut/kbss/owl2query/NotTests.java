@@ -2,8 +2,10 @@ package cz.cvut.kbss.owl2query;
 
 import java.net.URI;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
+import cz.cvut.kbss.owl2query.model.*;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
@@ -15,15 +17,11 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import cz.cvut.kbss.owl2query.engine.OWL2QueryEngine;
-import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.OWL2QueryFactory;
-import cz.cvut.kbss.owl2query.model.QueryResult;
-import cz.cvut.kbss.owl2query.model.Variable;
 import cz.cvut.kbss.owl2query.model.owlapi.OWLAPIv3OWL2Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NotTests extends TestCase {
+public class NotTests {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NotTests.class);
 
@@ -34,6 +32,7 @@ public class NotTests extends TestCase {
 	/**
 	 * SPO(?x,isMemberOf),NOT(SPO(?x,?y),SPO(?y,isMemberOf))
 	 */
+	@Test
 	public void testExample1() {
 		LOG.info(" ===========  " + getClass().getName() + " : testExample1");
 		final OWLOntologyManager m = OWLManager.createOWLOntologyManager();
@@ -70,8 +69,14 @@ public class NotTests extends TestCase {
 			final OWL2Query<OWLObject> queryNot = f.createQuery(ont)
 					.SubPropertyOf(vX, vY).SubPropertyOf(vY, f.wrap(pIsMemberOf))
 					.addDistVar(vX,true).addDistVar(vY,true);
-			
+
+
+			final Term<OWLObject> top = f.wrap(m.getOWLDataFactory().getOWLTopObjectProperty());
+			final Term<OWLObject> bottom = f.wrap(m.getOWLDataFactory().getOWLBottomObjectProperty());
+
 			final OWL2Query<OWLObject> q = f.createQuery(ont)
+					.StrictSubPropertyOf(vX, top).StrictSubPropertyOf(bottom,vX)
+					.StrictSubPropertyOf(vY, top).StrictSubPropertyOf(bottom,vY)
 					.SubPropertyOf(vX, f.wrap(pIsMemberOf)).Not(queryNot)
 					.addDistVar(vX,true).addDistVar(vY,true);
 
@@ -80,10 +85,7 @@ public class NotTests extends TestCase {
 
 			LOG.info(qr.toString());
 			assertEquals(8, qr.size());
-		} catch (OWLOntologyCreationException e) {
-			e.printStackTrace();
-			fail();
-		} catch (OWLOntologyChangeException e) {
+		} catch (OWLOntologyCreationException | OWLOntologyChangeException e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -94,6 +96,7 @@ public class NotTests extends TestCase {
 	 * 
 	 * SPO(?x,isMemberOf),NOT(EQ(?x,isMemberOf))
 	 */
+	@Test
 	public void testExample2() {
 		LOG.info(" ===========  " + getClass().getName() + " : testExample2");
 		final OWLOntologyManager m = OWLManager.createOWLOntologyManager();
@@ -128,24 +131,23 @@ public class NotTests extends TestCase {
 
 			final Variable<OWLObject> vX = f.variable("x");
 
+			final Term<OWLObject> top = f.wrap(m.getOWLDataFactory().getOWLTopObjectProperty());
+			final Term<OWLObject> bottom = f.wrap(m.getOWLDataFactory().getOWLBottomObjectProperty());
+
 			final OWL2Query<OWLObject> queryNot = f.createQuery(ont)
 					.EquivalentProperty(vX, f.wrap(pIsMemberOf));
-			queryNot.addDistVar(vX);
-			queryNot.addResultVar(vX);
+			queryNot.addDistVar(vX, true);
 			final OWL2Query<OWLObject> q = f.createQuery(ont)
+					.StrictSubPropertyOf(vX, top).StrictSubPropertyOf(bottom,vX)
 					.SubPropertyOf(vX, f.wrap(pIsMemberOf)).Asymmetric(vX).Not(queryNot);
-			q.addDistVar(vX);
-			q.addResultVar(vX);
+			q.addDistVar(vX, true);
 
 			// evaluation
 			final QueryResult<OWLObject> qr = OWL2QueryEngine.exec(q);
 
 			LOG.info("RESULT: " + qr);
 			assertEquals(2, qr.size());
-		} catch (OWLOntologyCreationException e) {
-			e.printStackTrace();
-			fail();
-		} catch (OWLOntologyChangeException e) {
+		} catch (OWLOntologyCreationException | OWLOntologyChangeException e) {
 			e.printStackTrace();
 			fail();
 		}
