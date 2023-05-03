@@ -26,39 +26,33 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cz.cvut.kbss.owl2query.model.*;
 import org.apache.jena.sparql.syntax.ElementBind;
 
 import cz.cvut.kbss.owl2query.UnsupportedQueryException;
-import cz.cvut.kbss.owl2query.model.GroundTerm;
-import cz.cvut.kbss.owl2query.model.InternalReasonerException;
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
-import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.OWL2QueryFactory;
-import cz.cvut.kbss.owl2query.model.OWLObjectType;
-import cz.cvut.kbss.owl2query.model.Term;
-import cz.cvut.kbss.owl2query.model.VarType;
-import cz.cvut.kbss.owl2query.model.Variable;
 
 class QueryImpl<G> implements InternalQuery<G> {
 
 	private static final Logger LOG = Logger.getLogger(InternalQuery.class
 			.getName());
 
-	private List<QueryAtom<G>> allAtoms = new ArrayList<QueryAtom<G>>();
-	private OWL2Ontology<G> ontology;
+	private final List<QueryAtom<G>> allAtoms = new ArrayList<>();
+	private final OWL2Ontology<G> ontology;
 
-	private Set<GroundTerm<G>> individualsAndLiterals = new HashSet<GroundTerm<G>>();;
+	private final Set<GroundTerm<G>> individualsAndLiterals = new HashSet<>();
 
 	// VARIABLES
-	private List<Variable<G>> resultVars = new ArrayList<Variable<G>>();;
-	private Set<Variable<G>> distVars = new HashSet<Variable<G>>();
-	private Map<Variable<G>, Set<VarType>> variables = new HashMap<Variable<G>, Set<VarType>>();;
+	private final List<Variable<G>> resultVars = new ArrayList<>();
+	private final Set<Variable<G>> distVars = new HashSet<>();
+	private final Map<Variable<G>, Set<VarType>> variables = new HashMap<>();
 
 	private boolean distinct = false;
 	private boolean empty = false;
 
 	private int offset = 0;
 	private int limit = Integer.MAX_VALUE;
+
+	private List<ResultBinding<G>> values = Collections.emptyList();
 
 	QueryImpl(final OWL2Ontology<G> kb) {
 		this.ontology = kb;
@@ -72,7 +66,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 		if (t.isVariable()) {
 			Set<VarType> vars = this.variables.get(t);
 			if (vars == null) {
-				vars = new HashSet<VarType>();
+				vars = new HashSet<>();
 				this.variables.put(t.asVariable(), vars);
 			}
 			empty &= !type.updateIfValid(vars);
@@ -200,7 +194,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	 * Returns a set of variables of ONE of the types.
 	 */
 	public Set<Variable<G>> getDistVarsOfTypes(final VarType... t) {
-		final Set<Variable<G>> vars = new HashSet<Variable<G>>();
+		final Set<Variable<G>> vars = new HashSet<>();
 
 		for (final Variable<G> v : distVars) {
 			final Set<VarType> varsx = this.variables.get(v);
@@ -236,9 +230,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	 * {@inheritDoc}
 	 */
 	public InternalQuery<G> addDistVar(Variable<G> a, boolean result) {
-		if (!distVars.contains(a)) {
-			distVars.add(a);
-		}
+		distVars.add(a);
 
 		if (result && !resultVars.contains(a)) {
 			resultVars.add(a);
@@ -279,7 +271,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	 * {@inheritDoc}
 	 */
 	public Set<Variable<G>> getUndistVars() {
-		final Set<Variable<G>> result = new HashSet<Variable<G>>(variables
+		final Set<Variable<G>> result = new HashSet<>(variables
 				.keySet());
 
 		result.removeAll(getDistVars());
@@ -320,7 +312,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	 */
 	public InternalQuery<G> apply(
 			final Map<? extends Term<G>, ? extends Term<G>> binding) {
-		final QueryImpl<G> query = new QueryImpl<G>(this);
+		final QueryImpl<G> query = new QueryImpl<>(this);
 
 		for (final QueryAtom<G> atom : getAtoms()) {
 			try {
@@ -353,7 +345,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 			LOG.fine("rollUp(" + var + ", " + this);
 		}
 
-		G result = _rollUpTo(var, new HashSet<QueryAtom<G>>(), visited);
+		G result = _rollUpTo(var, new HashSet<>(), visited);
 
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.fine("Rolling up " + var + " to " + result);
@@ -369,11 +361,10 @@ class QueryImpl<G> implements InternalQuery<G> {
 	 *            a term to which the query should be rolled
 	 * @param visited
 	 *            a set of visited edges
-	 * @return
 	 */
 	public <X extends Term<G>> G _rollUpTo(final Term<G> var,
 			final Set<QueryAtom<G>> visited, final Collection<X> stopTerms) {
-		Set<G> classParts = new HashSet<G>();
+		Set<G> classParts = new HashSet<>();
 
 		for (final QueryAtom<G> atom : findAtoms(QueryPredicate.Type, null, var)) {
 			final Term<G> arg = atom.getArguments().get(0);
@@ -474,7 +465,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	 */
 	public List<QueryAtom<G>> findAtoms(final QueryPredicate predicate,
 			final Term<G>... args) {
-		final List<QueryAtom<G>> list = new ArrayList<QueryAtom<G>>();
+		final List<QueryAtom<G>> list = new ArrayList<>();
 		for (final QueryAtom<G> atom : allAtoms) {
 			if (!predicate.equals(atom.getPredicate())) {
 				continue;
@@ -506,16 +497,13 @@ class QueryImpl<G> implements InternalQuery<G> {
 
 		allAtoms.remove(atom);
 
-		final Set<Term<G>> rest = new HashSet<Term<G>>();
-
-		boolean ground = true;
+		final Set<Term<G>> rest = new HashSet<>();
 
 		for (final QueryAtom<G> atom2 : allAtoms) {
-			ground &= atom2.isGround();
 			rest.addAll(atom2.getArguments());
 		}
 
-		final Set<Term<G>> toRemove = new HashSet<Term<G>>(atom.getArguments());
+		final Set<Term<G>> toRemove = new HashSet<>(atom.getArguments());
 		toRemove.removeAll(rest);
 
 		for (final Term<G> a : toRemove) {
@@ -532,8 +520,7 @@ class QueryImpl<G> implements InternalQuery<G> {
 	}
 
 	public String toString(boolean multiLine) {
-		final String indent = multiLine ? "     " : " ";
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 
 		sb.append("Q(");
 		for (int i = 0; i < resultVars.size(); i++) {
@@ -580,117 +567,117 @@ class QueryImpl<G> implements InternalQuery<G> {
 	}
 
 	public OWL2Query<G> Asymmetric(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Asymmetric, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.Asymmetric, pA));
 	}
 
 	public OWL2Query<G> ComplementOf(Term<G> cA1, Term<G> cA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.ComplementOf, cA1, cA2));
+		return add(new QueryAtomImpl<>(QueryPredicate.ComplementOf, cA1, cA2));
 	}
 
 	public OWL2Query<G> DatatypeProperty(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.DatatypeProperty, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.DatatypeProperty, pA));
 	}
 
 	public OWL2Query<G> DifferentFrom(Term<G> i1, Term<G> i2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.DifferentFrom, i1, i2));
+		return add(new QueryAtomImpl<>(QueryPredicate.DifferentFrom, i1, i2));
 	}
 
 	public OWL2Query<G> DirectSubClassOf(Term<G> c1, Term<G> c2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.DirectSubClassOf, c1, c2));
+		return add(new QueryAtomImpl<>(QueryPredicate.DirectSubClassOf, c1, c2));
 	}
 
 	public OWL2Query<G> DirectSubPropertyOf(Term<G> p1, Term<G> p2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.DirectSubPropertyOf, p1,
+		return add(new QueryAtomImpl<>(QueryPredicate.DirectSubPropertyOf, p1,
 				p2));
 	}
 
 	public OWL2Query<G> DirectType(Term<G> c, Term<G> i) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.DirectType, c, i));
+		return add(new QueryAtomImpl<>(QueryPredicate.DirectType, c, i));
 	}
 
 	public OWL2Query<G> DisjointWith(Term<G> cA1, Term<G> cA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.DisjointWith, cA1, cA2));
+		return add(new QueryAtomImpl<>(QueryPredicate.DisjointWith, cA1, cA2));
 	}
 
 	public OWL2Query<G> EquivalentClass(Term<G> cA1, Term<G> cA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.EquivalentClass, cA1,
+		return add(new QueryAtomImpl<>(QueryPredicate.EquivalentClass, cA1,
 				cA2));
 	}
 
 	public OWL2Query<G> EquivalentProperty(Term<G> pA1, Term<G> pA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.EquivalentProperty, pA1,
+		return add(new QueryAtomImpl<>(QueryPredicate.EquivalentProperty, pA1,
 				pA2));
 	}
 
 	public OWL2Query<G> Functional(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Functional, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.Functional, pA));
 	}
 
 	public OWL2Query<G> InverseFunctional(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.InverseFunctional, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.InverseFunctional, pA));
 	}
 
 	public OWL2Query<G> InverseOf(Term<G> pA1, Term<G> pA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.InverseOf, pA1, pA2));
+		return add(new QueryAtomImpl<>(QueryPredicate.InverseOf, pA1, pA2));
 	}
 
 	public OWL2Query<G> Irreflexive(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Irreflexive, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.Irreflexive, pA));
 	}
 
 	public OWL2Query<G> ObjectProperty(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.ObjectProperty, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.ObjectProperty, pA));
 	}
 
 	public OWL2Query<G> PropertyValue(Term<G> pA, Term<G> iA, Term<G> ilA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.PropertyValue, pA, iA,
+		return add(new QueryAtomImpl<>(QueryPredicate.PropertyValue, pA, iA,
 				ilA));
 	}
 
 	public OWL2Query<G> Reflexive(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Reflexive, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.Reflexive, pA));
 	}
 
 	public OWL2Query<G> SameAs(Term<G> i1, Term<G> i2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.SameAs, i1, i2));
+		return add(new QueryAtomImpl<>(QueryPredicate.SameAs, i1, i2));
 	}
 
 	// SPARQL-DL nonmonotonic extension
 	public OWL2Query<G> StrictSubClassOf(final Term<G> c1, final Term<G> c2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.StrictSubClassOf, c1, c2));
+		return add(new QueryAtomImpl<>(QueryPredicate.StrictSubClassOf, c1, c2));
 	}
 
 	public OWL2Query<G> StrictSubPropertyOf(final Term<G> c1, final Term<G> c2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.StrictSubPropertyOf, c1,
+		return add(new QueryAtomImpl<>(QueryPredicate.StrictSubPropertyOf, c1,
 				c2));
 	}
 
 	public OWL2Query<G> SubClassOf(Term<G> cA1, Term<G> cA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.SubClassOf, cA1, cA2));
+		return add(new QueryAtomImpl<>(QueryPredicate.SubClassOf, cA1, cA2));
 	}
 
 	public OWL2Query<G> SubPropertyOf(Term<G> pA1, Term<G> pA2) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.SubPropertyOf, pA1, pA2));
+		return add(new QueryAtomImpl<>(QueryPredicate.SubPropertyOf, pA1, pA2));
 	}
 
 	public OWL2Query<G> Symmetric(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Symmetric, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.Symmetric, pA));
 	}
 
 	public OWL2Query<G> Transitive(Term<G> pA) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Transitive, pA));
+		return add(new QueryAtomImpl<>(QueryPredicate.Transitive, pA));
 	}
 
 	public OWL2Query<G> Type(Term<G> c, Term<G> i) {
-		return add(new QueryAtomImpl<G>(QueryPredicate.Type, c, i));
+		return add(new QueryAtomImpl<>(QueryPredicate.Type, c, i));
 	}
 
 	public OWL2Query<G> Not(OWL2Query<G> qb) {
-		return add(new NotQueryAtom<G>((QueryImpl<G>) qb));
+		return add(new NotQueryAtom<>((QueryImpl<G>) qb));
 	}
 
 	public OWL2Query<G> Core(Term<G> c, GroundTerm<G> rollUp, InternalQuery<G> q) {
-		return add(new Core<G>(c, rollUp, q));
+		return add(new Core<>(c, rollUp, q));
 	}
 
 	@Override
@@ -730,6 +717,17 @@ class QueryImpl<G> implements InternalQuery<G> {
 	@Override
 	public int getLimit() {
 		return limit;
+	}
+
+	@Override
+	public OWL2Query<G> setValues(List<ResultBinding<G>> values) {
+		this.values = values;
+		return this;
+	}
+
+	@Override
+	public List<ResultBinding<G>> getValues() {
+		return values;
 	}
 
 }

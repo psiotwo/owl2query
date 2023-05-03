@@ -21,12 +21,10 @@ import cz.cvut.kbss.owl2query.model.GroundTerm;
 import cz.cvut.kbss.owl2query.model.ResultBinding;
 import cz.cvut.kbss.owl2query.model.Variable;
 
-@SuppressWarnings("serial")
-class ResultBindingImpl<G> extends LinkedHashMap<Variable<G>, GroundTerm<G>>
+public class ResultBindingImpl<G> extends LinkedHashMap<Variable<G>, GroundTerm<G>>
 		implements ResultBinding<G> {
 
-	ResultBindingImpl() {
-	}
+	public ResultBindingImpl() {}
 
 	ResultBindingImpl(final Map<Variable<G>, GroundTerm<G>> bindings) {
 		super(bindings);

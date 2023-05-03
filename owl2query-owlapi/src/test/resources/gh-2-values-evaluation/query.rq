@@ -1,0 +1,6 @@
+PREFIX : <https://com.github.psiotwo/ontologies/test/>
+
+SELECT ?x WHERE {
+  ?x a :OWLClassA .
+} 
+VALUES (?x) {(:a)}

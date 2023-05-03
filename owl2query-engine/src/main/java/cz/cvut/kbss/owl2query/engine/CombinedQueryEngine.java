@@ -56,24 +56,22 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 
 	private Set<Variable<G>> downMonotonic;
 
-	private long branches;
-
 	private QueryPlan<G> getExecutionPlan(InternalQuery<G> query) {
 		if (Configuration.SAMPLING_RATIO == 0) {
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("Using no reordering query plan.");
 			}
-			return new NoReorderingQueryPlan<G>(query);
+			return new NoReorderingQueryPlan<>(query);
 		} else if (query.getAtoms().size() <= Configuration.STATIC_REORDERING_LIMIT) {
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("Using full query plan.");
 			}
-			return new StaticCostQueryPlan<G>(query);
+			return new StaticCostQueryPlan<>(query);
 		} else {
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("Using incremental query plan.");
 			}
-			return new IncrementalQueryPlan<G>(query);
+			return new IncrementalQueryPlan<>(query);
 		}
 	}
 
@@ -88,7 +86,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 			throw new RuntimeException("No input data set is given for query!");
 		}
 
-		this.result = new QueryResultImpl<G>(query);
+		this.result = new QueryResultImpl<>(query);
 
 		this.query = setupCores(query);
 
@@ -99,32 +97,10 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 		this.plan = getExecutionPlan(this.query);
 		this.plan.reset();
 
-		// // warm up the reasoner by computing the satisfiability of classes
-		// // used in the query so that cached models can be used for instance
-		// // checking - TODO also non-named classes
-		// if (!kb.isClassified()) {
-		// for (final QueryAtom<G> a : oldQuery.getAtoms()) {
-		// for (final Term<G> arg : a.getArguments()) {
-		// if (!arg.isVariable()
-		// && kb
-		// .isClass(arg.asGroundTerm()
-		// .getWrappedObject())) {
-		// final G gt = arg.asGroundTerm()
-		// .getWrappedObject();
-		//
-		// kb.isSatisfiable(gt);
-		// kb.isSatisfiable(f.objectComplementOf(gt)); // TODO also
-		// // literals
-		// // : makeNot
-		// }
-		// }
-		// }
-		// }
-
 		if (Configuration.OPTIMIZE_DOWN_MONOTONIC) {
 			// TODO use down monotonic variables for implementation of
 			// DirectType atom
-			downMonotonic = new HashSet<Variable<G>>();
+			downMonotonic = new HashSet<>();
 			setupDownMonotonicVariables(this.query);
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("Variables to be optimized : " + downMonotonic);
@@ -132,18 +108,16 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 		}
 	}
 
-	// computes cores of undistinguished variables
 	private InternalQuery<G> setupCores(final InternalQuery<G> query) {
 		final Iterator<Variable<G>> undistVarIterator = query.getUndistVars()
 				.iterator();
 		if (!undistVarIterator.hasNext()) {
 			return query;
 		}
-		final DisjointSet<Object> coreVertices = new DisjointSet<Object>();
-		final List<QueryAtom<G>> toRemove = new ArrayList<QueryAtom<G>>();
+		final DisjointSet<Object> coreVertices = new DisjointSet<>();
 
 		final InternalQuery<G> transformedQuery = query
-				.apply(new ResultBindingImpl<G>());
+				.apply(new ResultBindingImpl<>());
 
 		while (undistVarIterator.hasNext()) {
 			final Term<G> a = undistVarIterator.next();
@@ -183,11 +157,11 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 			}
 		}
 
-		final Map<Variable<G>, Set<G>> map = new HashMap<Variable<G>, Set<G>>();
-		final Map<Variable<G>, InternalQuery<G>> map2 = new HashMap<Variable<G>, InternalQuery<G>>();
+		final Map<Variable<G>, Set<G>> map = new HashMap<>();
+		final Map<Variable<G>, InternalQuery<G>> map2 = new HashMap<>();
 
 		for (final Set<Object> set : coreVertices.getEquivalenceSets()) {
-			final InternalQuery<G> coreQuery = new QueryImpl<G>(kb);
+			final InternalQuery<G> coreQuery = new QueryImpl<>(kb);
 			for (final Object a : set) {
 				if (a instanceof QueryAtom) {
 					final QueryAtom<G> queryAtom = (QueryAtom<G>) a;
@@ -207,7 +181,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 				InternalQuery<G> s2 = map2.get(distVar);
 
 				if (s == null) {
-					s = new HashSet<G>();
+					s = new HashSet<>();
 					map.put(distVar, s);
 				}
 
@@ -223,7 +197,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 					s2.addResultVar(distVar);
 				}
 
-				s.add(coreQuery.rollUpTo(distVar, new HashSet<Term<G>>()));
+				s.add(coreQuery.rollUpTo(distVar, new HashSet<>()));
 			}
 		}
 
@@ -253,7 +227,6 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 				}
 				break;
 			default:
-				arg = null;
 			}
 		}
 	}
@@ -266,28 +239,20 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 			log.fine("Executing query " + query);
 		}
 
-		// Timer timer = new Timer( "CombinedQueryEngine" );
-		// timer.start();
-		// TODO timer start
 		prepare(query);
-		branches = 0;
-		exec(new ResultBindingImpl<G>());
-		// TODO timer stop
-		// timer.stop();
 
-		// if( log.isLoggable( Level.FINE ) ) {
-		// log.log( Level.FINE, "#B=" + branches + ", time=" + timer.getLast() +
-		// " ms." );
-		// }
+		if ( query.getValues() == null || query.getValues().isEmpty() ) {
+			exec(new ResultBindingImpl<>());
+		} else {
+			for (ResultBinding<G> b : query.getValues()) {
+				exec(b);
+			}
+		}
 
 		return result;
 	}
 
 	private void exec(ResultBinding<G> bindingX) {
-		if (log.isLoggable(Level.FINE)) {
-			branches++;
-		}
-
 		if (!plan.hasNext()) {
 			// TODO if result vars are not same as dist vars.
 			if (!bindingX.isEmpty() || result.isEmpty()) {
@@ -296,7 +261,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 				}
 
 				if (!result.getResultVars().containsAll(bindingX.keySet())) {
-					ResultBinding<G> newBinding = new ResultBindingImpl<G>();
+					ResultBinding<G> newBinding = new ResultBindingImpl<>();
 					for (Variable<G> var : result.getResultVars()) {
 						GroundTerm<G> value = bindingX.get(var);
 						newBinding.put(var, value);
@@ -322,12 +287,6 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 
 			ResultBinding<G> binding = bindingX.clone();
 			binding.putAll(it.next());
-
-			// if (atom3.isGround()) {
-			// current = atom3;
-			// } else {
-			// current = atom3.apply(binding);
-			// }
 
 			current = atom3.apply(binding, kb);
 
@@ -378,9 +337,6 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 							instanceCandidates = kb.getInstances(tC
 									.asGroundTerm().getWrappedObject(), direct);
 						} else if (tI.isGround()) {
-							// classCandidates =
-							// flatten(TaxonomyUtils.getTypes(kb
-							// .getTaxonomy(), tI, direct)); // TODO
 							classCandidates = kb.getTypes(tI.asGroundTerm()
 									.getWrappedObject(), direct); // TODO
 							instanceCandidates = Collections.singleton(tI
@@ -409,13 +365,13 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 					final Term<G> pvI = arguments.get(1);
 					final Term<G> pvIL = arguments.get(2);
 
-					Collection<? extends G> propertyCandidates = null;
+					Collection<? extends G> propertyCandidates;
 					Collection<? extends G> subjectCandidates = null;
 					Collection<? extends G> objectCandidates = null;
 
-					boolean loadProperty = false;
-					boolean loadSubjects = false;
-					boolean loadObjects = false;
+					boolean loadProperty;
+					boolean loadSubjects;
+					boolean loadObjects;
 
 					if (pvP.isGround()) {
 						propertyCandidates = Collections.singleton(pvP
@@ -541,7 +497,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 													.emptySet();
 										}
 									} else {
-										subjectCandidates = new HashSet<G>(
+										subjectCandidates = new HashSet<>(
 												kb.getIndividualsWithProperty(
 														property, object));
 									}
@@ -605,131 +561,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 									+ "cannot be satisfied in any consistent ontology.");
 						}
 					}
-					// TODO What about undist vars ?
-					// Query : PropertyValue(?x,p,_:x), Type(_:x, C),
-					// DifferentFrom( _:x, x) .
-					// Data : p(a,x) . p(b,y) . C(x) . C(y) .
-					// Result: {b}
-					//
-					// Data : p(a,x) . (exists p (C and {y}))(b) . C(x) .
-					// Result: {y}
-					//
-					// rolling-up to ?x : (exists p (C and not {x}))(?x) .
-					//
-					// More complex problems :
-					// Query : PropertyValue(?x,p,_:x), Type(_:x, C),
-					// DifferentFrom( _:x, _:y) . Type(_:y, T) .
-					// Data : p(a,x) . C(x) .
-					// Result: {a}
-					//
-					// Query : PropertyValue(?x,p,_:x), Type(_:x, C),
-					// DifferentFrom( _:x, _:y) . Type(_:y, T) .
-					// Data : p(x,x) . C(x) .
-					// Result: {}
-					//
-					// Query : PropertyValue(?x,p,_:x), Type(_:x, C),
-					// DifferentFrom( _:x, _:y) . Type(_:y, D) .
-					// Data : p(a,x) . C(x) . D(a) .
-					// Result: {a}
-					//
-					// rolling-up to ?x : (exists p (C and (not D)))(?x) .
-					//
-					// rolling-up to _:x of DifferentFrom(_:x,_:y) :
-					// roll-up(_:x) and (not roll-up(_:y)).
-					// but it is not complete if the rolling-up to _:y is
-					// not
-					// complete, but just a preprocessing (for example _:y
-					// is in
-					// a cycle).
 					break;
-
-				// case Annotation:
-				// final Term<G> aI = arguments.get(0);
-				// final Term<G> aP = arguments.get(1);
-				// final Term<G> aIL = arguments.get(2);
-				//
-				// propertyCandidates = null;
-				// subjectCandidates = null;
-				// objectCandidates = null;
-				//
-				// loadProperty = false;
-				// loadSubjects = false;
-				// loadObjects = false;
-				//
-				// propertyCandidates =
-				// Collections.singleton(aP.asGroundTerm());
-				//
-				// if (!aI.getTermType().equals(TermType.Variable)) {
-				// subjectCandidates = Collections
-				// .singleton(aI.asGroundTerm());
-				// objectCandidates =
-				// kb.getPropertyValues(aP.asGroundTerm(),
-				// aI.asGroundTerm());
-				// } else if (!aIL.getTermType().equals(TermType.Variable))
-				// {
-				// objectCandidates = Collections
-				// .singleton(aIL.asGroundTerm());
-				// subjectCandidates = kb.getIndividualsWithProperty(aP
-				// .asGroundTerm(), aIL.asGroundTerm());
-				// }
-				//
-				// loadProperty = false;
-				// loadSubjects = (subjectCandidates == null);
-				// loadObjects = (objectCandidates == null);
-				//
-				// for (final G property : propertyCandidates)
-				// {
-				// if (loadObjects && loadSubjects) {
-				// if (aI.equals(aIL)) {
-				// for (final G i : kb
-				// .getIndividuals()) {
-				// if (!kb.isAnnotation(i, property, i))
-				// continue;
-				// runNext(binding, arguments, i, property, i);
-				// }
-				// } else {
-				// for (final G subject : kb
-				// .getIndividuals()) {
-				// for (final G object : kb
-				// .getAnnotations(subject, property)) {
-				// runNext(binding, arguments, subject,
-				// property, object);
-				// }
-				// }
-				// }
-				// } else if (loadObjects) {
-				// // subject is known.
-				// for (final G subject : subjectCandidates) {
-				// for (final G object : kb
-				// .getAnnotations(subject, property)) {
-				// runNext(binding, arguments, subject, property,
-				// object);
-				// }
-				// }
-				// } else {
-				// // object is known.
-				// for (final G object : objectCandidates) {
-				// if (loadSubjects)
-				// subjectCandidates = new HashSet<G>(
-				// kb.getIndividualsWithAnnotation(
-				// property, object));
-				//
-				// for (final G subject : subjectCandidates) {
-				// if (loadProperty
-				// && !kb.isAnnotation(subject, property,
-				// object))
-				// continue;
-				//
-				// runNext(binding, arguments, subject, property,
-				// object);
-				// }
-				// }
-				// }
-				// }
-				//
-				// break;
-				// throw new IllegalArgumentException("The annotation atom "
-				// + current + " should be ground, but is not.");
 
 				// TBOX ATOMS
 				case DirectSubClassOf:
@@ -762,7 +594,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 										.getWrappedObject();
 
 								lhsCandidates = Collections.singleton(scLHSGT);
-								rhsCandidates = new HashSet<G>(kb
+								rhsCandidates = new HashSet<>(kb
 										.getClassHierarchy().getSupers(scLHSGT,
 												direct));
 
@@ -781,7 +613,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 										.getWrappedObject();
 
 								rhsCandidates = Collections.singleton(scRHSGT);
-								lhsCandidates = new HashSet<G>(kb
+								lhsCandidates = new HashSet<>(kb
 										.getClassHierarchy().getSubs(scRHSGT,
 												direct));
 
@@ -796,13 +628,13 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 									lhsCandidates.add(scRHSGT);
 								}
 							} else {
-								lhsCandidates = new HashSet<G>(kb.getClasses());
+								lhsCandidates = new HashSet<>(kb.getClasses());
 							}
 
 							boolean reload = (rhsCandidates == null);
 							for (final G subject : lhsCandidates) {
 								if (reload) {
-									rhsCandidates = new HashSet<G>(kb
+									rhsCandidates = new HashSet<>(kb
 											.getClassHierarchy().getSupers(
 													subject, direct));
 									if (strict) {
@@ -941,7 +773,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 
 								spLhsCandidates = Collections
 										.singleton(spLHSGT);
-								spRhsCandidates = new HashSet<G>(kb
+								spRhsCandidates = new HashSet<>(kb
 										.getPropertyHierarchy().getSupers(
 												spLHSGT, direct));
 								if (strict) {
@@ -957,7 +789,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 
 								spRhsCandidates = Collections
 										.singleton(spRHSGT);
-								spLhsCandidates = new HashSet<G>(kb
+								spLhsCandidates = new HashSet<>(kb
 										.getPropertyHierarchy().getSubs(
 												spRHSGT, direct));
 								if (strict) {
@@ -974,7 +806,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 							boolean reload = (spRhsCandidates == null);
 							for (final G subject : spLhsCandidates) {
 								if (reload) {
-									spRhsCandidates = new HashSet<G>(kb
+									spRhsCandidates = new HashSet<>(kb
 											.getPropertyHierarchy().getSupers(
 													subject, direct));
 									if (strict) {
@@ -1113,55 +945,16 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 					}
 					break;
 
-				// case UndistVarCore:
-				// final Core<G> core = (Core<G>) current.apply(binding);
-				// final Collection<Variable<G>> distVars =
-				// core.getDistVars();
-				//
-				// if (distVars.isEmpty()) {
-				// if
-				// (OWL2QueryEngine.execBooleanABoxQuery(core.getQuery())) {
-				// exec(binding);
-				// }
-				// } else if (distVars.size() == 1) {
-				// final Variable<G> var = distVars.iterator().next();
-				// final G c = core.getQuery().rollUpTo(var, distVars);
-				// for (final G a : kb.getInstances(c, false)) {
-				// final ResultBinding<G> candidateBinding = binding
-				// .clone();
-				// candidateBinding.put(var, f.wrap(a));
-				// exec(candidateBinding);
-				// }
-				// } else {
-				// // TODO
-				// // if (distVars.size() == 2
-				// // && core.getUndistVars().size() == 1
-				// // && !kb.getExpressivity().hasNominal()
-				// // && !kb.getExpressivity().hasTransitivity()) {
-				// // // TODO 1. undist. var. in distinguished manner
-				// // // TODO 2. identify both DV's
-				// // }
-				//
-				// if (Configuration.UNDIST_VAR_ALL_FAST) {
-				// execAllFastCore(oldQuery, binding, distVars, core
-				// .getUndistVars());
-				// } else {
-				// execSimpleCore(oldQuery, binding, distVars);
-				// }
-				// }
-				//
-				// break;
-
 				case Not:
 					NotQueryAtom<G> notAtom = (NotQueryAtom<G>) current;
 
-					List<Variable<G>> vars = new ArrayList<Variable<G>>(notAtom
+					List<Variable<G>> vars = new ArrayList<>(notAtom
 							.getQuery().getResultVars());
-					List<QueryResult<G>> candidates = new ArrayList<QueryResult<G>>();
+					List<QueryResult<G>> candidates = new ArrayList<>();
 
 					for (final Variable<G> v : notAtom.getQuery()
 							.getResultVars()) {
-						final List<G> cands = new ArrayList<G>();
+						final List<G> cands = new ArrayList<>();
 						cands.addAll(kb.getIndividuals());
 						cands.addAll(kb.getClasses());
 						cands.addAll(kb.getObjectProperties());
@@ -1179,7 +972,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 									}
 
 									public ResultBinding<G> next() {
-										return new ResultBindingImpl<G>(
+										return new ResultBindingImpl<>(
 												Collections.singletonMap(v,
 														f.wrap(ity.next())));
 									}
@@ -1196,7 +989,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 							}
 
 							public List<Variable<G>> getResultVars() {
-								return Arrays.<Variable<G>> asList(v);
+								return Arrays.asList(v);
 							}
 
 							public boolean isDistinct() {
@@ -1215,7 +1008,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 						candidates.add(candR);
 					}
 
-					CarthesianProductResult<G> results = new CarthesianProductResult<G>(
+					CarthesianProductResult<G> results = new CarthesianProductResult<>(
 							vars, candidates);
 
 					List<ResultBinding<G>> list = new ArrayList<>();
@@ -1235,21 +1028,8 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 
 						exec(candidateBinding);
 					}
-
-					// // case Execute:
-					// // Query<G> query = QueryRegistry.getQuery(atom3);
-					// // QueryResult result = new
-					// // QueryEngine<G>().exec(query, kb);
-					// // for (ResultBinding<G> b : result) {
-					// // ResultBinding<G> candidateBinding =
-					// binding.clone();
-					// // candidateBinding.puts(b);
-					// //
-					// // exec(candidateBinding);
-					// // }
-					// // break;
-					//
 					break;
+
 				default:
 					if ( current instanceof External ) {
 						final External<G> cur = (External<G>) current;
@@ -1274,56 +1054,9 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 		plan.back();
 	}
 
-	private void execSimpleCore(final InternalQuery<G> q,
-			final ResultBinding<G> binding,
-			final Collection<Variable<G>> distVars) {
-		final Map<Variable<G>, Set<? extends G>> varBindings = new HashMap<Variable<G>, Set<? extends G>>();
-
-		final OWL2Ontology<G> kb = q.getOntology();
-
-		for (final Variable<G> currVar : distVars) {
-			G rolledUpClass = q.rollUpTo(currVar,
-					Collections.<Term<G>> emptySet());
-
-			if (log.isLoggable(Level.FINER)) {
-				log.finer(currVar + " rolled to " + rolledUpClass);
-			}
-
-			Set<? extends G> inst = kb.getInstances(rolledUpClass, false);
-			varBindings.put(currVar, inst);
-		}
-
-		if (log.isLoggable(Level.FINER)) {
-			log.finer("Var bindings: " + varBindings);
-		}
-
-		boolean hasLiterals = q.getDistVarsOfTypes(
-				VarType.INDIVIDUAL_OR_LITERAL, VarType.LITERAL).isEmpty();
-
-		for (final Iterator<ResultBinding<G>> i = new BindingIterator<>(
-				varBindings, f); i.hasNext();) {
-			final ResultBinding<G> candidate = i.next().clone();
-			candidate.putAll(binding);
-			if (hasLiterals) {
-				for (final Iterator<ResultBinding<G>> l = new LiteralIterator<>(
-						q, candidate, f); l.hasNext();) {
-					final ResultBinding<G> mappy = binding.clone();
-					mappy.putAll(l.next());
-					if (OWL2QueryEngine.execBooleanABoxQuery(q.apply(mappy))) {
-						exec(mappy);
-					}
-				}
-			} else {
-				if (OWL2QueryEngine.execBooleanABoxQuery(q.apply(candidate))) {
-					exec(candidate);
-				}
-			}
-		}
-	}
-
 	private BindingIterator<G> resolveComplexExpressionVariables(
 			final Collection<Term<G>> terms) {
-		final Map<Variable<G>, Set<? extends G>> map = new HashMap<Variable<G>, Set<? extends G>>();
+		final Map<Variable<G>, Set<? extends G>> map = new HashMap<>();
 
 		for (final Term<G> t : terms) {
 			if (!t.isGround() && !t.isVariable()) {
@@ -1335,7 +1068,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 						map.put(var, kb.getClasses());
 						break;
 					case OBJECT_OR_DATA_PROPERTY:
-						Set<G> set = new HashSet<G>();
+						Set<G> set = new HashSet<>();
 						set.addAll(kb.getObjectProperties());
 						set.addAll(kb.getDataProperties());
 						map.put(var, set);
@@ -1358,39 +1091,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 			}
 		}
 
-		return new BindingIterator<G>(map, f);
-	}
-
-	private void execAllFastCore(final InternalQuery<G> q,
-			final ResultBinding<G> binding,
-			final Collection<Variable<G>> distVars,
-			final Collection<Variable<G>> undistVars) {
-		if (distVars.isEmpty()) {
-			exec(binding);
-		} else {
-			final Variable<G> var = distVars.iterator().next();
-			distVars.remove(var);
-			final G c = q.rollUpTo(var, Collections.<Term<G>> emptySet());
-			if (log.isLoggable(Level.FINER)) {
-				log.finer(var + " rolled to " + c);
-			}
-
-			final Map<G, Boolean> instances = kb.getKnownInstances(c);
-
-			for (final G b : instances.keySet()) {
-				final ResultBinding<G> newBinding = binding.clone();
-
-				newBinding.put(var, f.wrap(b));
-				final InternalQuery<G> q2 = q.apply(newBinding);
-
-				if (instances.get(b)
-						|| OWL2QueryEngine.execBooleanABoxQuery(q2)) {
-					execAllFastCore(q2, newBinding, distVars, undistVars);
-				}
-			}
-
-			distVars.add(var);
-		}
+		return new BindingIterator<>(map, f);
 	}
 
 	private void downMonotonic(final Hierarchy<G, ? extends G> taxonomy,
@@ -1428,12 +1129,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 						kb.getFactory().wrap(candidate));
 			}
 
-			// final Set<Term> toDo = lhsDM ? taxonomy.getFlattenedSubs(
-			// ATermUtils.normalize(candidate), direct) :
-			// taxonomy.getFlattenedSupers(ATermUtils.normalize(candidate),
-			// direct);
-
-			final Set<G> toDo = new HashSet<G>(lhsDM ? taxonomy.getSubs(
+			final Set<G> toDo = new HashSet<>(lhsDM ? taxonomy.getSubs(
 					candidate, direct) : taxonomy.getSupers(candidate, direct));
 
 			if (strict) {
@@ -1443,7 +1139,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 			}
 
 			runRecursively(taxonomy, downMonotonic, candidate, newBinding,
-					new HashSet<G>(toDo), direct, strict);
+					new HashSet<>(toDo), direct, strict);
 		}
 	}
 
@@ -1523,8 +1219,6 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 		}
 
 		if (strict || result.size() > size) {
-			// final Set<Term> subs = t.getSFlattenedSubs(rootCandidate,
-			// direct);
 			final Set<? extends G> subs = t.getSubs(rootCandidate, direct);
 
 			for (final G subject : subs) {
@@ -1561,7 +1255,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 	}
 
 	private Set<G> getObjectAndDataProperties() {
-		final Set<G> sss = new HashSet<G>(kb.getObjectProperties());
+		final Set<G> sss = new HashSet<>(kb.getObjectProperties());
 		sss.addAll(kb.getDataProperties());
 		return sss;
 	}
@@ -1574,7 +1268,7 @@ class CombinedQueryEngine<G> implements QueryEvaluator<G> {
 			for (final G top : h.getTops()) {
 
 				if (candidates.contains(top)) {
-					runRecursively(h, var, top, binding, new HashSet<G>(
+					runRecursively(h, var, top, binding, new HashSet<>(
 							candidates), false, false);
 				}
 			}

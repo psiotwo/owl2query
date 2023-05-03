@@ -29,8 +29,6 @@ public class OWL2QueryEngine {
 
     private static <G> QueryEvaluator<G> getQueryExec() {
         return new CombinedQueryEngine<>();
-        // return new OptimizedRollingUpEvaluator<G>();
-        // return new SimpleRollingUpExec<G>();
     }
 
     public static <G> QueryResult<G> exec(final String sparql,
@@ -100,24 +98,13 @@ public class OWL2QueryEngine {
 
         final QueryEvaluator<G> e = getQueryExec();
 
-        // long satCount = onto.getSatisfiabilityCount();
-        // long consCount = onto.getConsistencyCount();
-
-        // if (log.isLoggable(Level.FINE)) {
-        // log.fine("Results: " + qr);
-        // log.fine("Total satisfiability operations: "
-        // + (onto.getSatisfiabilityCount() - satCount));
-        // log.fine("Total consistency operations: "
-        // + (onto.getConsistencyCount() - consCount));
-        // }
-
         return e.evaluate(query);
     }
 
     /**
      * If a query has disconnected components such as C(x), D(y) then it should
      * be answered as two separate queries. The answers to each query should be
-     * combined at the end by taking Cartesian product.(we combine results on a
+     * combined at the end by taking Cartesian product. We combine results on a
      * tuple basis as results are iterated. This way we avoid generating the
      * full Cartesian product. Splitting the query ensures the correctness of
      * the answer, e.g. rolling-up technique becomes applicable.
@@ -205,8 +192,6 @@ public class OWL2QueryEngine {
 
     /**
      * Simplifies the query.
-     *
-     * @param query
      */
     private static <G> void simplify(InternalQuery<G> query) {
         final Map<Variable<G>, Set<G>> allInferredTypes = new HashMap<>();
@@ -350,9 +335,6 @@ public class OWL2QueryEngine {
 
     /**
      * Executes all boolean ABox atoms
-     *
-     * @param query
-     * @return
      */
     public static <G> boolean execBooleanABoxQuery(final InternalQuery<G> query) {
         // if (!query.getDistVars().isEmpty()) {
@@ -389,7 +371,6 @@ public class OWL2QueryEngine {
                                 arguments.get(2).asGroundTerm().getWrappedObject());
                         break;
                     default:
-                        tripleSatisfied = null;
                 }
             }
 
