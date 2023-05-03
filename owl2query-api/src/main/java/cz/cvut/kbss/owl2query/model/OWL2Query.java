@@ -14,6 +14,8 @@
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.model;
 
+import java.util.List;
+
 public interface OWL2Query<G> {
 
 	/**
@@ -108,4 +110,8 @@ public interface OWL2Query<G> {
 	OWL2Query<G> setLimit(int limit);
 
 	int getLimit();
+
+	OWL2Query<G> setValues(List<ResultBinding<G>> values);
+
+	List<ResultBinding<G>> getValues();
 }

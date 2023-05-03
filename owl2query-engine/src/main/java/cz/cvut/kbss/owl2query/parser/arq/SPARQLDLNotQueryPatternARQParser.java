@@ -32,11 +32,6 @@ import org.apache.jena.graph.impl.LiteralLabel;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.TriplePath;
 import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.syntax.Element;
-import org.apache.jena.sparql.syntax.ElementGroup;
-import org.apache.jena.sparql.syntax.ElementNotExists;
-import org.apache.jena.sparql.syntax.ElementPathBlock;
-import org.apache.jena.sparql.syntax.ElementTriplesBlock;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 
@@ -60,9 +55,9 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 
 	private Map<Node, List<Term<G>>> lists;
 
-	private OWL2Ontology<G> ont;
+	private final OWL2Ontology<G> ont;
 
-	private OWL2QueryFactory<G> f;	
+	private final OWL2QueryFactory<G> f;
 	
 	public SPARQLDLNotQueryPatternARQParser(OWL2Ontology<G> ont) {
 		this.ont = ont;
@@ -71,7 +66,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 
 	public void parseTriplePath(Collection<TriplePath> trip,
 			final OWL2Query<G> query) {
-		List<Triple> t = new ArrayList<Triple>();
+		List<Triple> t = new ArrayList<>();
 		for (TriplePath p : trip) {
 			if (!p.isTriple()) {
 				log.warning("NOT A TRIPLE - ignoring:" + p);
@@ -84,11 +79,11 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 
 	public void parse(Collection<Triple> trip, final OWL2Query<G> query)
 			throws UnsupportedQueryException {
-		terms = new HashMap<Node, Term<G>>();
-		lists = new HashMap<Node, List<Term<G>>>();
-		triples = new LinkedHashSet<Triple>(trip);
+		terms = new HashMap<>();
+		lists = new HashMap<>();
+		triples = new LinkedHashSet<>(trip);
 
-		for (final Triple t : new ArrayList<Triple>(triples)) {
+		for (final Triple t : new ArrayList<>(triples)) {
 			final Node subj = t.getSubject();
 			final Node pred = t.getPredicate();
 			final Node obj = t.getObject();
@@ -310,35 +305,11 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 				setupIndividualOrLiteralTerm(obj, o, p, query);
 			}
 		}
-
-		// throw new UnsupportedQueryException(
-		// "Queries with variable predicates are not supported "
-		// + "(add the pattern {?p rdf:type owl:ObjectProperty} or"
-		// + " {?p rdf:type owl:DatatypeProperty} to the query)");
-
 	}
 
 	private void setupIndividualOrLiteralTerm(final Node oN, final Term<G> oT,
 			final Term<G> pT, final OWL2Query<G> query) {
 		if (isDistinguishedVariable(oN)) {
-			// VarType vt = VarType.INDIVIDUAL_OR_LITERAL;
-			//
-			// if ((pT != null) && (pT.isGround())) {
-			// final G g = pT.asGroundTerm().getWrappedObject();
-			//
-			// if (ont.isDataProperty(g)) {
-			// vt = VarType.LITERAL;
-			// } else if (ont.isObjectProperty(g)) {
-			// vt = VarType.INDIVIDUAL;
-			// } else if (log.isLoggable(Level.WARNING)) {
-			// log
-			// .warning("The term '"
-			// + g
-			// +
-			// "' is neither a data property nor an object property, yet it is used as a property in a property assertion.");
-			// }
-			// }
-
 			query.addDistVar(oT.asVariable());
 		}
 	}
@@ -367,28 +338,6 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 			throws UnsupportedQueryException {
 		if (pT.isVariable()) {
 			ensureDistinguished(pN);
-
-			// VarType vt;
-			// if (type == null) {
-			// vt = VarType.OBJECT_OR_DATA_PROPERTY;
-			// if ((oT != null) && (oT.isGround())) {
-			// final G g = oT.asGroundTerm().getWrappedObject();
-			//
-			// if (ont.isLiteral(g)) {
-			// vt = VarType.DATA_PROPERTY;
-			// } else if (ont.isIndividual(g)) {
-			// vt = VarType.OBJECT_PROPERTY;
-			// } else if (log.isLoggable(Level.WARNING)) {
-			// log
-			// .warning("The term '"
-			// + g
-			// +
-			// "' is neither a literal nor an individual, yet it is used as an object in a property assertion.");
-			// }
-			// }
-			// } else {
-			// vt = type;
-			// }
 
 			query.addDistVar(pT.asVariable());
 		} else if (!pT.isGround()) {
@@ -425,8 +374,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 	}
 
 	private boolean hasObject(Node subj, Node pred) {
-		for (final Iterator<Triple> i = triples.iterator(); i.hasNext();) {
-			final Triple t = i.next();
+		for (final Triple t : triples) {
 			if (subj.equals(t.getSubject()) && pred.equals(t.getPredicate()))
 				return true;
 		}
@@ -453,18 +401,6 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 		return false;
 	}
 
-	// private G getLiteralDatatype(Node subj, Node pred, Node obj)
-	// throws UnsupportedQueryException {
-	// if (!obj.isLiteral()) {
-	// throw new UnsupportedQueryException("Expected literal : " + obj);
-	// }
-	// if (obj.getLiteralDatatypeURI() == null) {
-	// return null;
-	// } else {
-	// return ont.getFactory().namedDataRange(obj.getLiteralDatatypeURI());
-	// }
-	// }
-
 	private List<Term<G>> createList(final Node node, VarType type)
 			throws UnsupportedQueryException {
 		if (node.equals(RDF.nil.asNode()))
@@ -483,7 +419,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 					+ (first == null ? "rdf:first" : "rdf:rest") + " property.");
 		}
 
-		final List<Term<G>> list = new ArrayList<Term<G>>();
+		final List<Term<G>> list = new ArrayList<>();
 		list.add(node2term(first, type));
 		list.addAll(createList(rest, type));
 
@@ -526,7 +462,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 		// for qualified cardinalities
 		final Node clazz = getObject(node, OWL2.onClass.asNode());
 
-		Node o = null;
+		Node o;
 		if ((o = getObject(node, OWL2.hasValue.asNode())) != null) {
 			t = f.hasValue(pt, node2term(o, VarType.INDIVIDUAL_OR_LITERAL));
 		} else if (hasObject(node, OWL2.hasSelf.asNode(), ResourceFactory
@@ -569,456 +505,15 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 			int cardinality = Integer.parseInt(o.getLiteral().getLexicalForm());
 			t = f.exactCardinality(cardinality, pt, terms.get(clazz));
 		} else {
-			throw new UnsupportedQueryException("Unknown restriction type: "
-					+ o);
+			throw new UnsupportedQueryException("Unknown restriction type");
 		}
 
 		return t;
 	}
 
-//	public Term<G> someValuesFrom(final Term<G> ope, final Term<G> ce) {
-//		if (ce.isGround() && ope.isGround()) {
-//			final G ceG = ce.asGroundTerm().getWrappedObject();
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataSomeValuesFrom(opeG, ceG));
-//			} else {
-//				return f.wrap(f.objectSomeValuesFrom(opeG, ceG));
-//			}
-//		} else {
-//			return new SomeValuesFrom<G>(ope, ce) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> ce2 = ce.apply(binding);
-//					final Term<G> ope2 = ope.apply(binding);
-//
-//					return someValuesFrom(ope2, ce2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-
-//	public Term<G> allValuesFrom(final Term<G> ope, final Term<G> ce) {
-//		if (ce.isGround() && ope.isGround()) {
-//			final G ceG = ce.asGroundTerm().getWrappedObject();
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataAllValuesFrom(opeG, ceG));
-//			} else {
-//				return f.wrap(f.objectAllValuesFrom(opeG, ceG));
-//			}
-//		} else {
-//			return new AllValuesFrom<G>(ope, ce) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> ce2 = ce.apply(binding);
-//					final Term<G> ope2 = ope.apply(binding);
-//
-//					return allValuesFrom(ope2, ce2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-
-//	public Term<G> objectComplementOf(final Term<G> c) {
-//		if (c.isGround()) {
-//			return f.wrap(f.objectComplementOf(c.asGroundTerm()
-//					.getWrappedObject()));
-//		} else {
-//			return new ObjectComplementOf<G>(c) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> c2 = c.apply(binding);
-//					return objectComplementOf(c2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> exactCardinality(final int card, final Term<G> ope,
-//			final Term<G> ce) {
-//		if (ce.isGround() && ope.isGround()) {
-//			final G ceG = ce.asGroundTerm().getWrappedObject();
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataExactCardinality(card, opeG, ceG));
-//			} else {
-//				return f.wrap(f.objectExactCardinality(card, opeG, ceG));
-//			}
-//		} else {
-//			return new ExactCardinality<G>(card, ope, ce) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> ce2 = ce.apply(binding);
-//					final Term<G> ope2 = ope.apply(binding);
-//					return exactCardinality(card, ope2, ce2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> exactCardinality(final int card, final Term<G> ope) {
-//		if (ope.isGround()) {
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataExactCardinality(card, opeG,
-//						f.getTopDatatype()));
-//			} else {
-//				return f.wrap(f.objectExactCardinality(card, opeG, f.getThing()));
-//			}
-//		} else {
-//			return new ExactCardinality<G>(card, ope) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					return exactCardinality(card, ope.apply(binding));
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> objectHasSelf(final Term<G> ope) {
-//		if (ope.isGround()) {
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//			return f.wrap(f.objectHasSelf(opeG));
-//		} else {
-//			return new ObjectHasSelf<G>(ope) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					return objectHasSelf(ope.apply(binding));
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> hasValue(final Term<G> ope, final Term<G> ni) {
-//		if (ni.isGround() && ope.isGround()) {
-//			final G niG = ni.asGroundTerm().getWrappedObject();
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataHasValue(opeG, niG));
-//			} else {
-//				return f.wrap(f.objectHasValue(opeG, niG));
-//			}
-//		} else {
-//			return new HasValue<G>(ope, ni) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> ce2 = ni.apply(binding);
-//					final Term<G> ope2 = ope.apply(binding);
-//
-//					return hasValue(ope2, ce2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.INDIVIDUAL;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> maxCardinality(final int card, final Term<G> ope,
-//			final Term<G> ce) {
-//		if (ce.isGround() && ope.isGround()) {
-//			final G ceG = ce.asGroundTerm().getWrappedObject();
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataMaxCardinality(card, opeG, ceG));
-//			} else {
-//				return f.wrap(f.objectMaxCardinality(card, opeG, ceG));
-//			}
-//		} else {
-//			return new MaxCardinality<G>(card, ope, ce) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> ce2 = ce.apply(binding);
-//					final Term<G> ope2 = ope.apply(binding);
-//					return maxCardinality(card, ope2, ce2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> maxCardinality(final int card, final Term<G> ope) {
-//		if (ope.isGround()) {
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataMaxCardinality(card, opeG,
-//						f.getTopDatatype()));
-//			} else {
-//				return f.wrap(f.objectMaxCardinality(card, opeG, f.getThing()));
-//			}
-//		} else {
-//			return new MaxCardinality<G>(card, ope) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					return maxCardinality(card, ope.apply(binding));
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> minCardinality(final int card, final Term<G> ope) {
-//		if (ope.isGround()) {
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataMinCardinality(card, opeG,
-//						f.getTopDatatype()));
-//			} else {
-//				return f.wrap(f.objectMinCardinality(card, opeG, f.getThing()));
-//			}
-//		} else {
-//			return new MinCardinality<G>(card, ope) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					return minCardinality(card, ope.apply(binding));
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> minCardinality(final int card, final Term<G> ope,
-//			final Term<G> ce) {
-//		if (ce.isGround() && ope.isGround()) {
-//			final G ceG = ce.asGroundTerm().getWrappedObject();
-//			final G opeG = ope.asGroundTerm().getWrappedObject();
-//
-//			if (ont.is(opeG, OWLObjectType.OWLDataProperty)) {
-//				return f.wrap(f.dataMinCardinality(card, opeG, ceG));
-//			} else {
-//				return f.wrap(f.objectMinCardinality(card, opeG, ceG));
-//			}
-//		} else {
-//			return new MinCardinality<G>(card, ope, ce) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					final Term<G> ce2 = ce.apply(binding);
-//					final Term<G> ope2 = ope.apply(binding);
-//					return minCardinality(card, ope2, ce2);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (var.equals(terms.get(0))) {
-//						return VarType.OBJECT_OR_DATA_PROPERTY;
-//					} else if (var.equals(terms.get(1))) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	private Term<G> unionOf(Set<Term<G>> c) {
-//		boolean ground = true;
-//
-//		Set<Term<G>> terms = new HashSet<Term<G>>();
-//		Set<G> ces = new HashSet<G>();
-//
-//		boolean data = false;
-//
-//		for (final Term<G> o : c) {
-//			if (!o.isGround()) {
-//				ground = false;
-//				break;
-//			} else {
-//				G g = o.asGroundTerm().getWrappedObject();
-//				data |= !ont.is(g, OWLObjectType.OWLClass);
-//				ces.add(g);
-//			}
-//		}
-//
-//		if (ground) {
-//			if (data) {
-//				return f.wrap(f.dataUnionOf(ces));
-//			} else {
-//				return f.wrap(f.objectUnionOf(ces));
-//			}
-//
-//		} else {
-//			return new UnionOf<G>(c) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					Set<Term<G>> nts = new HashSet<Term<G>>();
-//
-//					for (final Term<G> x : this.terms) {
-//						nts.add(x.apply(binding));
-//					}
-//					return unionOf(nts);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (terms.contains(var)) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-//
-//	public Term<G> intersectionOf(Set<Term<G>> c) {
-//		boolean ground = true;
-//
-//		Set<Term<G>> terms = new HashSet<Term<G>>();
-//		Set<G> ces = new HashSet<G>();
-//
-//		boolean data = false;
-//
-//		for (final Term<G> o : c) {
-//			if (!o.isGround()) {
-//				ground = false;
-//				break;
-//			} else {
-//				G g = o.asGroundTerm().getWrappedObject();
-//				data |= !ont.is(g, OWLObjectType.OWLClass);
-//				ces.add(g);
-//			}
-//		}
-//
-//		if (ground) {
-//			if (data) {
-//				return f.wrap(f.dataIntersectionOf(ces));
-//			} else {
-//				return f.wrap(f.objectIntersectionOf(ces));
-//			}
-//		} else {
-//			return new IntersectionOf<G>(c) {
-//
-//				public Term<G> apply(Map<Variable<G>, GroundTerm<G>> binding) {
-//					Set<Term<G>> nts = new HashSet<Term<G>>();
-//
-//					for (final Term<G> x : this.terms) {
-//						nts.add(x.apply(binding));
-//					}
-//					return intersectionOf(nts);
-//				}
-//
-//				public VarType getVariableType(Variable<G> var) {
-//					if (terms.contains(var)) {
-//						return VarType.CLASS;
-//					} else {
-//						throw new IllegalArgumentException();
-//					}
-//				}
-//			};
-//		}
-//	}
-
-	private Set<G> asGroundTerms(Collection<Term<G>> t) {
-		final Set<G> s = new HashSet<G>();
-
-		for (final Term<G> x : t) {
-			s.add(x.asGroundTerm().getWrappedObject());
-		}
-
-		return s;
-	}
-
-	private Term<G> node2term(Node node, VarType type)
+	public Term<G> node2term(Node node, VarType type)
 			throws UnsupportedQueryException {
-		Term<G> t = (Term<G>) terms.get(node);
+		Term<G> t = terms.get(node);
 
 		if (t == null) {
 			if (node.equals(OWL2.Thing.asNode()))
@@ -1055,7 +550,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 				t = createRestriction(node);
 				terms.put(node, t);
 			} else if (node.isBlank() || node.isVariable()) {
-				Node o = null;
+				Node o;
 				if ((o = getObject(node, OWL2.intersectionOf.asNode())) != null) {
 					final Collection<Term<G>> list = createList(o,
 							VarType.CLASS);
@@ -1064,7 +559,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 					// OWL2.Class.asNode())) {
 					// // t = f.wrap(qf
 					// // .objectIntersectionOf(asGroundTerms(list)));
-					t = f.intersectionOf(new HashSet<Term<G>>(list));
+					t = f.intersectionOf(new HashSet<>(list));
 					// } else {
 					// throw new UnsupportedQueryException(
 					// "Expected unionOf to be of type owl:Class.");
@@ -1078,7 +573,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 
 					// if (hasObject(node, RDF.type.asNode(),
 					// OWL2.Class.asNode())) {
-					t = f.unionOf(new HashSet<Term<G>>(list));
+					t = f.unionOf(new HashSet<>(list));
 					// // t = f.wrap(f.objectUnionOf(asGroundTerms(list)));
 					// } else {
 					// throw new UnsupportedQueryException(
@@ -1089,7 +584,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 					hasObject(node, RDF.type.asNode(), OWL2.Class.asNode(),
 							true);
 
-					final Collection<Term<G>> list = createList(o,
+					createList(o,
 							VarType.CLASS);
 
 					final Set<Term<G>> result = Collections.emptySet();
@@ -1143,6 +638,7 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 						case CLASS:
 							t = f.wrap(f.namedClass(uri));
 							break;
+						case OBJECT_OR_DATA_PROPERTY:
 						case OBJECT_PROPERTY:
 							t = f.wrap(f.namedObjectProperty(uri));
 							break;
@@ -1152,9 +648,6 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 						case INDIVIDUAL_OR_LITERAL:
 						case INDIVIDUAL:
 							t = f.wrap(f.namedIndividual(uri));
-							break;
-						case OBJECT_OR_DATA_PROPERTY:
-							t = f.wrap(f.namedObjectProperty(uri));
 							break;
 						}
 					} else {
@@ -1169,25 +662,4 @@ public class SPARQLDLNotQueryPatternARQParser<G> {
 
 		return t;
 	}
-
-
-
-
-	// public static void main(String[] args) {
-	// SparqlARQParser<OWLObject> o = new SparqlARQParser<OWLObject>();
-	// OWLOntologyManager m = OWLManager.createOWLOntologyManager();
-	// OWLOntology ont;
-	// try {
-	// ont = m.createOntology();
-	// OWLReasoner r = new StructuralReasonerFactory()
-	// .createNonBufferingReasoner(ont);
-	//
-	// o.parse("SELECT * WHERE {?x ?y ?z.}", new OWLAPIv3OWL2Ontology(m,
-	// ont, r));
-	//
-	// } catch (OWLOntologyCreationException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
 }
