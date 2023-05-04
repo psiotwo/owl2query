@@ -124,9 +124,9 @@ class OWLAPIv3OWL2Ontology(private val m: OWLOntologyManager, private val o: OWL
         if (ope.isAnonymous) {
             throw InternalReasonerException()
         } else if (ope.isObjectPropertyExpression) {
-            r.getObjectPropertyDomains(ope.asOWLObjectProperty(), true) // TODO
+            r.getObjectPropertyDomains(ope.asOWLObjectProperty(), true)
         } else if (ope.isDataPropertyExpression) {
-            r.getDataPropertyDomains(ope.asOWLDataProperty(), true) // TODO
+            r.getDataPropertyDomains(ope.asOWLDataProperty(), true)
         }
         throw InternalReasonerException()
     }
@@ -153,9 +153,9 @@ class OWLAPIv3OWL2Ontology(private val m: OWLOntologyManager, private val o: OWL
             throw InternalReasonerException()
         } else if (ope.isObjectPropertyExpression) {
             return r.getObjectPropertyRanges(ope.asOWLObjectProperty(), true).entities()
-                .collect(Collectors.toSet()) // TODO
+                .collect(Collectors.toSet())
         } else if (ope.isDataPropertyExpression) {
-            return EntitySearcher.getRanges(ope.asOWLDataProperty(), o).collect(Collectors.toSet()) // TODO
+            return EntitySearcher.getRanges(ope.asOWLDataProperty(), o).collect(Collectors.toSet())
         }
         throw InternalReasonerException()
     }
@@ -326,8 +326,6 @@ class OWLAPIv3OWL2Ontology(private val m: OWLOntologyManager, private val o: OWL
     }
 
     override fun isClassified(): Boolean {
-        // TODO
-        // return r.isClassified();
         return false
     }
 
