@@ -11,7 +11,7 @@
     <name>OWL2Query OWLAPI Adapter</name>
 
     <properties>
-        <net.sourceforge.owlapi.version>5.5.0</net.sourceforge.owlapi.version>
+        <net.sourceforge.owlapi.version>5.1.20</net.sourceforge.owlapi.version>
         <!-- Last version of Openllet supporting Java 8 -->
         <openllet.version>2.6.4</openllet.version>
     </properties>
