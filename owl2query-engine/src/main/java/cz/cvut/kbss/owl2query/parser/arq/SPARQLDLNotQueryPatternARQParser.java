@@ -14,18 +14,8 @@
  *******************************************************************************/
 package cz.cvut.kbss.owl2query.parser.arq;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
-
+import cz.cvut.kbss.owl2query.UnsupportedQueryException;
+import cz.cvut.kbss.owl2query.model.*;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.impl.LiteralLabel;
@@ -35,15 +25,8 @@ import org.apache.jena.sparql.core.Var;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 
-import cz.cvut.kbss.owl2query.UnsupportedQueryException;
-import cz.cvut.kbss.owl2query.model.Configuration;
-import cz.cvut.kbss.owl2query.model.OWL2Ontology;
-import cz.cvut.kbss.owl2query.model.OWL2Query;
-import cz.cvut.kbss.owl2query.model.OWL2QueryFactory;
-import cz.cvut.kbss.owl2query.model.OWLObjectType;
-import cz.cvut.kbss.owl2query.model.Term;
-import cz.cvut.kbss.owl2query.model.VarType;
-import cz.cvut.kbss.owl2query.model.Variable;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class SPARQLDLNotQueryPatternARQParser<G> {
 	
